@@ -19,7 +19,7 @@ jobs:
       
       # Langkah 2: Menggunakan FTP-Deploy-Action untuk meng-upload file
       - name: Deploy Website to cPanel via FTP
-        uses: SamKirkland/FTP-Deploy-Action@4.0.0
+        uses: SamKirkland/FTP-Deploy-Action@4.3.3
         with:
           ftp-server: ${{ secrets.FTP_SERVER }}  # Alamat server FTP
           ftp-username: ${{ secrets.FTP_USERNAME }}  # Username FTP
