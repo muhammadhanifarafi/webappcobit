@@ -1,0 +1,1 @@
+[29-Oct-2024 07:24:10 UTC] PHP Fatal error:  Composer detected issues in your platform: Your Composer dependencies require a PHP version ">= 8.0.2". You are running 5.6.40. in /home/cobitdemoptsico/public_html/vendor/composer/platform_check.php on line 25
