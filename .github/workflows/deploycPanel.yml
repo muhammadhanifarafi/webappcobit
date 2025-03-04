@@ -21,6 +21,6 @@ jobs:
       - name: Deploy Website to cPanel via FTP
         uses: SamKirkland/FTP-Deploy-Action@4.3.3
         with:
-          ftp-server: ${{ secrets.FTP_SERVER }}  # Alamat server FTP
-          ftp-username: ${{ secrets.FTP_USERNAME }}  # Username FTP
-          ftp-password: ${{ secrets.FTP_PASSWORD }}  # Password FTP
+          server: ${{ secrets.FTP_SERVER }}  # Alamat server FTP
+          username: ${{ secrets.FTP_USERNAME }}  # Username FTP
+          password: ${{ secrets.FTP_PASSWORD }}  # Password FTP
