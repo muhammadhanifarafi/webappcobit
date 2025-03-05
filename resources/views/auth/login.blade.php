@@ -112,7 +112,7 @@
     <div class="login-logo">
         <a href="{{ url('/') }}">
             <img src="{{ url($setting->path_logo) }}" alt="logo.png">
-            <div><b>SISTEM APLIKASI COBIT</b></div>
+            <div style="font-size: 18px;"><b>Sistem Aplikasi COBIT</b></div>
         </a>
     </div>
 
