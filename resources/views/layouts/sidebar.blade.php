@@ -102,12 +102,6 @@
                     <i class="fa fa-handshake-o"></i> <span>Berita Acara Serah Terima</span>
                 </a>
             </li>
-            <li class="header">REPORT</li>
-            <li>
-                <a href="{{ route('laporan.index') }}">
-                    <i class="fa fa-file-pdf-o"></i> <span>Laporan</span>
-                </a>
-            </li>
             @endif
             @if (auth()->user()->level == 1)
             <li class="header">SYSTEM</li>
