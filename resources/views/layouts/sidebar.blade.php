@@ -21,19 +21,19 @@
                     <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                 </a>
             </li> -->
-            @if (auth()->user()->level == 2)
+            @if (auth()->user()->level == 2 || auth()->user()->level == 5)
                 <li>
                     <a href="{{ route('permintaan_pengembangan.index3') }}">
-                        <i class="fa fa-map-o"></i> <span>List Permintaan</span>
+                        <i class="fa fa-map-o"></i> <span>List Project</span>
                     </a>
                 </li>    
             @endif      
             @if (auth()->user()->level == 2)
-            <li class="header">DETAIL MASTER</li>
+            <!-- <li class="header">DETAIL MASTER</li> -->
             @else
             <li class="header">MASTER</li>
             @endif
-            @if(auth()->user()->level == 1 || auth()->user()->level == 2 || auth()->user()->level == 3 || auth()->user()->level == 5)
+            @if(auth()->user()->level == 1 || auth()->user()->level == 3 || auth()->user()->level == 5)
             <!-- <li>
                 <a href="{{ route('permintaan_pengembangan.index') }}">
                     <i class="fa fa-envelope-o"></i> <span>Permintaan Pengembangan</span>
@@ -102,38 +102,13 @@
                     <i class="fa fa-handshake-o"></i> <span>Berita Acara Serah Terima</span>
                 </a>
             </li>
-            {{-- <li class="header">TRANSAKSI</li>
-            <li>
-                <a href="{{ route('pengeluaran.index') }}">
-                    <i class="fa fa-money"></i> <span>Pengeluaran</span>
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('pembelian.index') }}">
-                    <i class="fa fa-download"></i> <span>Pembelian</span>
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('penjualan.index') }}">
-                    <i class="fa fa-upload"></i> <span>Penjualan</span>
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('transaksi.index') }}">
-                    <i class="fa fa-cart-arrow-down"></i> <span>Transaksi Aktif</span>
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('transaksi.baru') }}">
-                    <i class="fa fa-cart-arrow-down"></i> <span>Transaksi Baru</span>
-                </a>
-            </li>
             <li class="header">REPORT</li>
             <li>
                 <a href="{{ route('laporan.index') }}">
                     <i class="fa fa-file-pdf-o"></i> <span>Laporan</span>
                 </a>
-            </li> --}}
+            </li>
+            @endif
             @if (auth()->user()->level == 1)
             <li class="header">SYSTEM</li>
             <li>
@@ -142,20 +117,8 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route("setting.index") }}">
+                <a href="{{ route('setting.index') }}">
                     <i class="fa fa-cogs"></i> <span>Pengaturan</span>
-                </a>
-            </li>
-            @endif
-            @else
-            <li>
-                <a href="{{ route('transaksi.index') }}">
-                    <i class="fa fa-cart-arrow-down"></i> <span>Transaksi Aktif</span>
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('transaksi.baru') }}">
-                    <i class="fa fa-cart-arrow-down"></i> <span>Transaksi Baru</span>
                 </a>
             </li>
             @endif

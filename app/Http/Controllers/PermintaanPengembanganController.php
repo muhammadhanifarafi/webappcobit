@@ -14,6 +14,7 @@ use App\Models\AnalisisDesain;
 use App\Models\QualityAssuranceTesting;
 use App\Models\UserAcceptanceTesting;
 use App\Models\SerahTerimaAplikasi;
+use App\Models\Setting;
 use App\Models\FlagStatus;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -382,8 +383,19 @@ class PermintaanPengembanganController extends Controller
 
     public function data3()
     {
-        $trx_permintaan_pengembangan = PermintaanPengembangan::orderBy('id_permintaan_pengembangan', 'desc');     
-        $trx_permintaan_pengembangan = $trx_permintaan_pengembangan->get();        
+        $trx_permintaan_pengembangan = [];
+
+        foreach (PermintaanPengembangan::all() as $data) {
+            if (auth()->user()->level != 2) {
+                if (auth()->user()->id == $data->created_by) {
+                    $trx_permintaan_pengembangan[] = $data;
+                }
+            } else {
+                $trx_permintaan_pengembangan[] = $data;
+            }
+        }
+        
+        $trx_permintaan_pengembangan = collect($trx_permintaan_pengembangan)->sortByDesc('id_permintaan_pengembangan');
         
         return datatables()
             ->of($trx_permintaan_pengembangan)
@@ -478,9 +490,9 @@ class PermintaanPengembanganController extends Controller
                                 <table class="table table-bordered">';
             
                 // Helper function for rendering the approval status and buttons
-                $renderApproval = function ($status, $route, $is_approve, $label, $nikPenyetuju = null, $is_approve_pemverifikasi = null, $nikPemverifikasi = null) use ($nikLogin) {
+                $renderApproval = function ($status, $route, $is_approve, $label, $nikPenyetuju = null, $is_approve_pemverifikasi = null, $nikPemverifikasi = null) use ($nikLogin, $trx_permintaan_pengembangan) {
                     $labelClass = $is_approve != 1 ? 'label label-warning' : 'label label-success';
-                    $labelText = $is_approve != 1 ? 'Menunggu Persetujuan' : 'Sudah Disetujui';
+                    $labelText = $is_approve != 1 ? 'Menunggu Persetujuan Penyetuju <b><span style="color:black"> (' . $trx_permintaan_pengembangan->nama_penyetuju . ')</span></b>' : 'Sudah Disetujui Penyetuju <b><span style="color:black"> (' . $trx_permintaan_pengembangan->approve_by . ')</span></b>';
                     $buttonText = $is_approve != 1 ? 'Approve' : 'Approved';
                     $buttonClass = $is_approve != 1 ? 'btn-warning' : 'btn-success';
                     $buttonDisabled = $is_approve != 1 ? '' : 'disabled';
@@ -504,11 +516,13 @@ class PermintaanPengembanganController extends Controller
                                     <i class=\"fa fa-download\"></i> Cetak Dokumen
                                 </button>
                             </td>
+                            " . (auth()->user()->level == 2 ? "
                             <td>
-                                <button type=\"button\" onclick=\"approveProyek('{$route}')\" class=\"btn btn-xs {$buttonClass} btn-flat\" {$buttonDisabled}>
-                                    <i class=\"fa fa-check\"></i> {$buttonText}
-                                </button>
+                            <button type=\"button\" onclick=\"approveProyek('{$route}')\" class=\"btn btn-xs {$buttonClass} btn-flat\" {$buttonDisabled}>
+                                <i class=\"fa fa-check\"></i> {$buttonText}
+                            </button>
                             </td>
+                            " : "") . "
                         </tr>
                     ";
                 };
@@ -532,7 +546,10 @@ class PermintaanPengembanganController extends Controller
                         'Persetujuan Pengembangan',
                         $persetujuanPengembangan->nik_penyetuju
                     ) : 
-                    '<tr><td colspan="2" class="text-center">Belum ada persetujuan</td></tr>';
+                    '<tr>
+                    <td colspan="2">Persetujuan Pengembangan</td>
+                    <td colspan="2" class="text-left"><span class="text-danger font-weight-bold" style="background-color: yellow;">Belum ada persetujuan</span></td>
+                    </tr>';
             
                 // Perencanaan Proyek (dengan pengecekan is_approve_pemverifikasi dan nik_pemverifikasi)
                 $perencanaanProyek = PerencanaanProyek::where('id_persetujuan_pengembangan', $persetujuanPengembangan ? $persetujuanPengembangan->id_persetujuan_pengembangan : null)->first();
@@ -546,7 +563,9 @@ class PermintaanPengembanganController extends Controller
                         $perencanaanProyek->is_approve_pemverifikasi, // Menambahkan pengecekan is_approve_pemverifikasi
                         $perencanaanProyek->nik_pemverifikasi // Menambahkan pengecekan nik_pemverifikasi
                     ) : 
-                    '<tr><td colspan="2" class="text-center">Belum ada perencanaan proyek</td></tr>';
+                    '<tr>
+                     <td colspan="2">Perencanaan Proyek</td>
+                     <td colspan="2" class="text-left"><span class="text-danger font-weight-bold" style="background-color: yellow;">Belum ada perencanaan proyek</td></tr>';
             
                 // Perencanaan Kebutuhan (dengan pengecekan is_approve_pemverifikasi dan nik_pemverifikasi)
                 $perencanaanKebutuhan = PerencanaanKebutuhan::where('id_persetujuan_pengembangan', $persetujuanPengembangan ? $persetujuanPengembangan->id_persetujuan_pengembangan : null)->first();
@@ -560,7 +579,9 @@ class PermintaanPengembanganController extends Controller
                         $perencanaanKebutuhan->is_approve_pemverifikasi, // Menambahkan pengecekan is_approve_pemverifikasi
                         $perencanaanKebutuhan->nik_pemverifikasi // Menambahkan pengecekan nik_pemverifikasi
                     ) : 
-                    '<tr><td colspan="2" class="text-center">Belum ada perencanaan kebutuhan</td></tr>';
+                    '<tr>
+                    <td colspan="2">Perencanaan Kebutuhan</td>
+                    <td colspan="2" class="text-left"><span class="text-danger font-weight-bold" style="background-color: yellow;">Belum ada perencanaan kebutuhan</td></tr>';
             
                 // Analisis dan Desain
                 $analisisDesain = AnalisisDesain::where('id_permintaan_pengembangan', $trx_permintaan_pengembangan->id_permintaan_pengembangan)->first();
@@ -572,7 +593,9 @@ class PermintaanPengembanganController extends Controller
                         'Analisis dan Desain',
                         $analisisDesain->nik_penyetuju
                     ) : 
-                    '<tr><td colspan="2" class="text-center">Belum ada analisis dan desain</td></tr>';
+                    '<tr>
+                    <td colspan="2">Analisis dan Desain</td>
+                    <td colspan="2" class="text-left"><span class="text-danger font-weight-bold" style="background-color: yellow;">Belum ada analisis dan desain</td></tr>';
             
                 // Quality Assurance Testing
                 $qualityAssuranceTesting = QualityAssuranceTesting::where('id_permintaan_pengembangan', $trx_permintaan_pengembangan->id_permintaan_pengembangan)->first();
@@ -584,7 +607,9 @@ class PermintaanPengembanganController extends Controller
                         'Quality Assurance Testing',
                         $qualityAssuranceTesting->nik_penyetuju
                     ) : 
-                    '<tr><td colspan="2" class="text-center">Belum ada quality assurance testing</td></tr>';
+                    '<tr>
+                    <td colspan="2">Quality Assurance Testing</td>
+                    <td colspan="2" class="text-left"><span class="text-danger font-weight-bold" style="background-color: yellow;">Belum ada quality assurance testing</td></tr>';
             
                 // Serah Terima Aplikasi
                 $serahTerimaAplikasi = SerahTerimaAplikasi::where('id_permintaan_pengembangan', $trx_permintaan_pengembangan->id_permintaan_pengembangan)->first();
@@ -596,8 +621,19 @@ class PermintaanPengembanganController extends Controller
                         'Serah Terima Aplikasi',
                         $serahTerimaAplikasi->nik_penyetuju
                     ) : 
-                    '<tr><td colspan="2" class="text-center">Belum ada serah terima aplikasi</td></tr>';
-            
+                    '<tr>
+                    <td colspan="2">Serah Terima Aplikasi</td>
+                    <td colspan="2" class="text-left"><span class="text-danger font-weight-bold" style="background-color: yellow;">Belum ada serah terima aplikasi</td></tr>';
+                
+                $html .= '<tr>
+                    <td colspan="4" class="text-left">
+                        <button onclick="cetakReportSummary(`' . route('permintaan_pengembangan.cetakDokumenSummary', $trx_permintaan_pengembangan->id_permintaan_pengembangan) . '`)" class="btn btn-info btn-xs btn-flat">
+                            <i class="fa fa-download"></i> Cetak Report Project
+                        </button>
+                    </td>
+                  </tr>';
+
+                  
                 $html .= '</table>
                         </div>
                     </div>';
@@ -925,6 +961,85 @@ class PermintaanPengembanganController extends Controller
         $pdf->setPaper('a4', 'portrait');
         return $pdf->stream('permintaan.pdf');
     }
+
+    public function cetakDokumenSummary(Request $request)
+    {
+        set_time_limit(300);
+
+        $idPermintaan = $request->query();
+        $id_permintaan_pengembangan = key($idPermintaan); 
+        $id_permintaan_pengembangan = (int) $id_permintaan_pengembangan;
+        
+        $datapermintaan = PermintaanPengembangan::leftJoin('users', 'users.id', '=', 'trx_permintaan_pengembangan.created_by')
+            ->select('trx_permintaan_pengembangan.*', 'users.name as nama_pengaju')
+            ->where('trx_permintaan_pengembangan.id_permintaan_pengembangan', $id_permintaan_pengembangan)
+            ->get();
+
+        $trx_permintaan_pengembangan = PermintaanPengembangan::where('id_permintaan_pengembangan', $id_permintaan_pengembangan)->get();
+        $trx_persetujuan_pengembangan = PersetujuanPengembangan::where('id_permintaan_pengembangan', $id_permintaan_pengembangan)->get();
+        
+        $trx_perencanaan_proyek = PerencanaanProyek::join('trx_persetujuan_pengembangan', 'trx_persetujuan_pengembangan.id_persetujuan_pengembangan', '=', 'trx_perencanaan_proyek.id_persetujuan_pengembangan')
+            ->join('trx_permintaan_pengembangan', 'trx_permintaan_pengembangan.id_permintaan_pengembangan', '=', 'trx_persetujuan_pengembangan.id_permintaan_pengembangan')
+            ->select('trx_perencanaan_proyek.*')
+            ->where('trx_permintaan_pengembangan.id_permintaan_pengembangan', $id_permintaan_pengembangan)
+            ->get();
+
+        $trx_perencanaan_kebutuhan = PerencanaanKebutuhan::join('trx_persetujuan_pengembangan', 'trx_persetujuan_pengembangan.id_persetujuan_pengembangan', '=', 'trx_perencanaan_kebutuhan.id_persetujuan_pengembangan')
+            ->join('trx_permintaan_pengembangan', 'trx_permintaan_pengembangan.id_permintaan_pengembangan', '=', 'trx_persetujuan_pengembangan.id_permintaan_pengembangan')
+            ->select('trx_perencanaan_kebutuhan.*')
+            ->where('trx_permintaan_pengembangan.id_permintaan_pengembangan', $id_permintaan_pengembangan)
+            ->get();
+
+        $trx_persetujuan_pengembangan = PersetujuanPengembangan::where('id_permintaan_pengembangan', $id_permintaan_pengembangan)->get();
+        $trx_analisis_desain = AnalisisDesain::where('id_permintaan_pengembangan', $id_permintaan_pengembangan)->get();
+        $trx_user_acceptance_testing = UserAcceptanceTesting::where('id_permintaan_pengembangan', $id_permintaan_pengembangan)->get();
+        $trx_quality_assurance_testing = QualityAssuranceTesting::where('id_permintaan_pengembangan', $id_permintaan_pengembangan)->get();
+        $trx_serah_terima_aplikasi = serahterimaaplikasi::where('id_permintaan_pengembangan', $id_permintaan_pengembangan)->get();
+        $setting = Setting::get();
+
+        $no  = 1;
+
+        $pdf = PDF::loadView('permintaan_pengembangan.dokumensumarry', compact('datapermintaan', 'trx_permintaan_pengembangan', 'trx_persetujuan_pengembangan', 'trx_perencanaan_proyek', 'trx_perencanaan_kebutuhan', 'trx_analisis_desain', 'trx_user_acceptance_testing', 'trx_quality_assurance_testing', 'trx_serah_terima_aplikasi', 'setting', 'no'));
+
+        $pdf->setPaper('a4', 'landscape');
+        return $pdf->stream('permintaan.pdf');
+    }
+
+    
+    public function cetakAllDokumenSummary(Request $request)
+    {
+        set_time_limit(300);
+        
+        $datapermintaan = PermintaanPengembangan::leftJoin('users', 'users.id', '=', 'trx_permintaan_pengembangan.created_by')
+            ->select('trx_permintaan_pengembangan.*', 'users.name as nama_pengaju')
+            ->get();
+
+        $trx_permintaan_pengembangan = PermintaanPengembangan::get();
+        $trx_persetujuan_pengembangan = PersetujuanPengembangan::get();
+        $trx_perencanaan_proyek = PerencanaanProyek::join('trx_persetujuan_pengembangan', 'trx_persetujuan_pengembangan.id_persetujuan_pengembangan', '=', 'trx_perencanaan_proyek.id_persetujuan_pengembangan')
+            ->join('trx_permintaan_pengembangan', 'trx_permintaan_pengembangan.id_permintaan_pengembangan', '=', 'trx_persetujuan_pengembangan.id_permintaan_pengembangan')
+            ->select('trx_perencanaan_proyek.*')
+            ->get();
+
+        $trx_perencanaan_kebutuhan = PerencanaanKebutuhan::join('trx_persetujuan_pengembangan', 'trx_persetujuan_pengembangan.id_persetujuan_pengembangan', '=', 'trx_perencanaan_kebutuhan.id_persetujuan_pengembangan')
+            ->join('trx_permintaan_pengembangan', 'trx_permintaan_pengembangan.id_permintaan_pengembangan', '=', 'trx_persetujuan_pengembangan.id_permintaan_pengembangan')
+            ->select('trx_perencanaan_kebutuhan.*')
+            ->get();
+
+        $trx_analisis_desain = AnalisisDesain::get();
+        $trx_user_acceptance_testing = UserAcceptanceTesting::get();
+        $trx_quality_assurance_testing = QualityAssuranceTesting::get();
+        $trx_serah_terima_aplikasi = serahterimaaplikasi::get();
+        $setting = Setting::get();
+
+        $no  = 1;
+
+        $pdf = PDF::loadView('permintaan_pengembangan.dokumenallsumarry', compact('datapermintaan', 'trx_permintaan_pengembangan', 'trx_persetujuan_pengembangan', 'trx_perencanaan_proyek', 'trx_perencanaan_kebutuhan', 'trx_analisis_desain', 'trx_user_acceptance_testing', 'trx_quality_assurance_testing', 'trx_serah_terima_aplikasi', 'setting', 'no'));
+
+        $pdf->setPaper('a4', 'landscape');
+        return $pdf->stream('permintaan.pdf');
+    }
+
     public function cetakDokumenPersetujuan(Request $request)
     {
         set_time_limit(300);

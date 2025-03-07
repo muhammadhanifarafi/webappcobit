@@ -80,11 +80,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/dashboard/getDetail2/{id}/{id2}', [DashboardController::class, 'getDetail2'])->name('getDetail2');
 
     Route::get('/dashboard/detailtaskdashboard/{id}', [DashboardController::class, 'detailtaskdashboard'])->name('detailtaskdashboard');
-
-    Route::group(['middleware' => 'level:2'], function () {
-        Route::get('/permintaan_pengembangan/index3', [PermintaanPengembanganController::class, 'index3'])->name('permintaan_pengembangan.index3');
-        Route::get('/permintaan_pengembangan/data3', [PermintaanPengembanganController::class, 'data3'])->name('permintaan_pengembangan.data3');
-    });
+    Route::get('/permintaan_pengembangan/index3', [PermintaanPengembanganController::class, 'index3'])->name('permintaan_pengembangan.index3');
+    Route::get('/permintaan_pengembangan/data3', [PermintaanPengembanganController::class, 'data3'])->name('permintaan_pengembangan.data3');
     
     
     Route::group(['middleware' => 'level:1,2,3,4,5'], function () {
@@ -128,6 +125,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::delete('permintaan_pengembangan/delete_selected', [PermintaanPengembanganController::class, 'deleteSelected'])->name('permintaan_pengembangan.delete_selected');
         Route::post('/permintaan_pengembangan/update-pdf/{id}', [PermintaanPengembanganController::class, 'updatePDF'])->name('permintaan_pengembangan.updatePDF');
         Route::post('/permintaan_pengembangan/cetak-dokumen', [PermintaanPengembanganController::class, 'cetakDokumen'])->name('permintaan_pengembangan.cetakDokumen');
+        Route::get('/permintaan_pengembangan/cetak-dokumen-summary', [PermintaanPengembanganController::class, 'cetakDokumenSummary'])->name('permintaan_pengembangan.cetakDokumenSummary');
+        Route::get('/permintaan_pengembangan/cetak-all-dokumen-summary', [PermintaanPengembanganController::class, 'cetakAllDokumenSummary'])->name('permintaan_pengembangan.cetakAllDokumenSummary');
         Route::post('/permintaan_pengembangan/cetak-dokumen-persetujuan', [PermintaanPengembanganController::class, 'cetakDokumenPersetujuan'])->name('permintaan_pengembangan.cetakDokumenPersetujuan');
         Route::get('/permintaan_pengembangan/{id}/view', [PermintaanPengembanganController::class, 'view'])->name('permintaan_pengembangan.view');
         Route::post('/permintaan_pengembangan/approve/{id}', [PermintaanPengembanganController::class, 'approveProyek'])->name('permintaan_pengembangan.approveProyek');
