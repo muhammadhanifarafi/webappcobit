@@ -181,7 +181,7 @@
         $('#modal-form [name=id_persetujuan_pengembangan]').prop('disabled', false);
         $('#modal-form [name=nomor_proyek]').focus();
 
-        var getnamapemohon = 'https://cobit.ptsi.co.id/public/dashboard/get-nama-pemohon';
+        var getnamapemohon = 'https://cobit-demo.ptsi.co.id/dashboard/get-nama-pemohon';
         $.get(getnamapemohon)
         .done((response) => {
             let pemohonSelect = $('#modal-form [name=nik_pemohon]');
@@ -200,7 +200,7 @@
             return;
         });
 
-        var getnamapemverifikasi = 'https://cobit.ptsi.co.id/public/dashboard/get-nama-pemverifikasi';
+        var getnamapemverifikasi = 'https://cobit-demo.ptsi.co.id/dashboard/get-nama-pemverifikasi';
         $.get(getnamapemverifikasi)
         .done((response) => {
             let pemverifikasiSelect = $('#modal-form #nik_pemverifikasi');
@@ -218,7 +218,7 @@
             alert('Tidak dapat mengambil data pemverifikasi');
             return;
         });
-        var getnamapenyetuju = 'https://cobit.ptsi.co.id/public/dashboard/get-nama-penyetuju';
+        var getnamapenyetuju = 'https://cobit-demo.ptsi.co.id/dashboard/get-nama-penyetuju';
         $.get(getnamapenyetuju)
         .done((response) => {
             let penyetujuSelect = $('#modal-form #nik_penyetuju');
@@ -241,7 +241,7 @@
     // On Change Atribut
     $("#modal-form [name=nik_pemohon]").on('change', function() {
             var nik = $(this).val();
-            var url_link_get_identity_by_nik = 'https://cobit.ptsi.co.id/public/dashboard/get-identity-by-nik/' + nik;
+            var url_link_get_identity_by_nik = 'https://cobit-demo.ptsi.co.id/dashboard/get-identity-by-nik/' + nik;
             
             $.get(url_link_get_identity_by_nik)
             .done((response) => {
@@ -256,7 +256,7 @@
 
     $("#modal-form [name=nik_pemverifikasi]").on('change', function() {
             var nik = $(this).val();
-            var url_link_get_identity_by_nik = 'https://cobit.ptsi.co.id/public/dashboard/get-identity-by-nik/' + nik;
+            var url_link_get_identity_by_nik = 'https://cobit-demo.ptsi.co.id/dashboard/get-identity-by-nik/' + nik;
 
             $.get(url_link_get_identity_by_nik)
             .done((response) => {
@@ -271,7 +271,7 @@
 
     $("#modal-form [name=nik_penyetuju]").on('change', function() {
             var nik = $(this).val();
-            var url_link_get_identity_by_nik = 'https://cobit.ptsi.co.id/public/dashboard/get-identity-by-nik/' + nik;
+            var url_link_get_identity_by_nik = 'https://cobit-demo.ptsi.co.id/dashboard/get-identity-by-nik/' + nik;
 
             $.get(url_link_get_identity_by_nik)
             .done((response) => {
@@ -328,7 +328,7 @@
                 var response_nik_pemverifikasi = response.nik_pemverifikasi;
                 var response_nik_penyetuju = response.nik_penyetuju;
 
-                var getnamapemohon = 'https://cobit.ptsi.co.id/public/dashboard/get-nama-pemohon';
+                var getnamapemohon = 'https://cobit-demo.ptsi.co.id/dashboard/get-nama-pemohon';
                 $.get(getnamapemohon)
                 .done((response) => {
                     let pemohonSelect = $('#modal-form [name=nik_pemohon]');
@@ -347,7 +347,7 @@
                     return;
                 });
 
-                var getnamapemverifikasi = 'https://cobit.ptsi.co.id/public/dashboard/get-nama-pemverifikasi';
+                var getnamapemverifikasi = 'https://cobit-demo.ptsi.co.id/dashboard/get-nama-pemverifikasi';
                 $.get(getnamapemverifikasi)
                 .done((response) => {
                     let pemverifikasiSelect = $('#modal-form #nik_pemverifikasi');
@@ -366,7 +366,7 @@
                     return;
                 });
 
-                var getnamapenyetuju = 'https://cobit.ptsi.co.id/public/dashboard/get-nama-penyetuju';
+                var getnamapenyetuju = 'https://cobit-demo.ptsi.co.id/dashboard/get-nama-penyetuju';
                 $.get(getnamapenyetuju)
                 .done((response) => {
                     let penyetujuSelect = $('#modal-form #nik_penyetuju');

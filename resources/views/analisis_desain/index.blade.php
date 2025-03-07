@@ -163,7 +163,7 @@ table.dataTable td.detil_arsitektur {
                     success: function(response) {
                         $('#modal-form').modal('hide');
                         // table.ajax.reload();
-                        window.location.href = 'https://cobit.ptsi.co.id/analisis_desain';
+                        window.location.href = 'http://127.0.0.1:8000/analisis_desain';
                     },
                     error: function(errors) {
                         alert('Tidak dapat menyimpan data');
@@ -189,7 +189,7 @@ table.dataTable td.detil_arsitektur {
         $('#modal-form [name=_method]').val('post');
         $('#modal-form [name=nama_proyek]').focus();
 
-        var getnamapemohon = 'https://cobit.ptsi.co.id/public/dashboard/get-nama-pemohon';
+        var getnamapemohon = 'https://cobit-demo.ptsi.co.id/dashboard/get-nama-pemohon';
         $.get(getnamapemohon)
         .done((response) => {
             let pemohonSelect = $('#modal-form [name=nik_pemohon]');
@@ -207,7 +207,7 @@ table.dataTable td.detil_arsitektur {
             alert('Tidak dapat mengambil data pemohon');
             return;
         });
-        var getnamapenyetuju = 'https://cobit.ptsi.co.id/public/dashboard/get-nama-penyetuju';
+        var getnamapenyetuju = 'https://cobit-demo.ptsi.co.id/dashboard/get-nama-penyetuju';
         $.get(getnamapenyetuju)
         .done((response) => {
             let penyetujuSelect = $('#modal-form #nik_penyetuju');
@@ -229,7 +229,7 @@ table.dataTable td.detil_arsitektur {
     // On Change Atribut
     $("#modal-form [name=nik_pemohon]").on('change', function() {
             var nik = $(this).val();
-            var url_link_get_identity_by_nik = 'https://cobit.ptsi.co.id/public/dashboard/get-identity-by-nik/' + nik;
+            var url_link_get_identity_by_nik = 'https://cobit-demo.ptsi.co.id/dashboard/get-identity-by-nik/' + nik;
             
             $.get(url_link_get_identity_by_nik)
             .done((response) => {
@@ -244,7 +244,7 @@ table.dataTable td.detil_arsitektur {
 
     $("#modal-form [name=nik_penyetuju]").on('change', function() {
             var nik = $(this).val();
-            var url_link_get_identity_by_nik = 'https://cobit.ptsi.co.id/public/dashboard/get-identity-by-nik/' + nik;
+            var url_link_get_identity_by_nik = 'https://cobit-demo.ptsi.co.id/dashboard/get-identity-by-nik/' + nik;
 
             $.get(url_link_get_identity_by_nik)
             .done((response) => {
@@ -318,7 +318,7 @@ table.dataTable td.detil_arsitektur {
                 var response_nik_pemohon = response.nik_pemohon;
                 var response_nik_penyetuju = response.nik_penyetuju;
 
-                var getnamapemohonpenyetuju = 'https://cobit.ptsi.co.id/public/dashboard/get-nama-pemohon-penyetuju';
+                var getnamapemohonpenyetuju = 'https://cobit-demo.ptsi.co.id/dashboard/get-nama-pemohon-penyetuju';
                 $.get(getnamapemohonpenyetuju)
                 .done((response) => {
                     let pemohonSelect = $('#modal-form [name=nik_pemohon]');

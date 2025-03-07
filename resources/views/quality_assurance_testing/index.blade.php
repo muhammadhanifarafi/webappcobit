@@ -154,7 +154,7 @@
                     success: function(response) {
                         $('#modal-form').modal('hide');
                         // table.ajax.reload();
-                        window.location.href = 'https://cobit.ptsi.co.id/quality_assurance_testing';
+                        window.location.href = 'http://127.0.0.1:8000/quality_assurance_testing';
                     },
                     error: function(errors) {
                         alert('Tidak dapat menyimpan data');
@@ -180,7 +180,7 @@
         $('#modal-form [name=_method]').val('post');
         $('#modal-form [name=nomor_proyek]').focus();
 
-        var getnamapemohonpenyetuju = 'https://cobit.ptsi.co.id/public/dashboard/get-nama-pemohon-penyetuju';
+        var getnamapemohonpenyetuju = 'https://cobit-demo.ptsi.co.id/dashboard/get-nama-pemohon-penyetuju';
         $.get(getnamapemohonpenyetuju)
         .done((response) => {
             let pemohonSelect = $('#modal-form [name=nik_pemohon]');
@@ -210,7 +210,7 @@
     // On Change Atribut
     $("#modal-form [name=nik_pemohon]").on('change', function() {
             var nik = $(this).val();
-            var url_link_get_identity_by_nik = 'https://cobit.ptsi.co.id/public/dashboard/get-identity-by-nik/' + nik;
+            var url_link_get_identity_by_nik = 'https://cobit-demo.ptsi.co.id/dashboard/get-identity-by-nik/' + nik;
             
             $.get(url_link_get_identity_by_nik)
             .done((response) => {
@@ -225,7 +225,7 @@
 
     $("#modal-form [name=nik_penyetuju]").on('change', function() {
             var nik = $(this).val();
-            var url_link_get_identity_by_nik = 'https://cobit.ptsi.co.id/public/dashboard/get-identity-by-nik/' + nik;
+            var url_link_get_identity_by_nik = 'https://cobit-demo.ptsi.co.id/dashboard/get-identity-by-nik/' + nik;
 
             $.get(url_link_get_identity_by_nik)
             .done((response) => {
@@ -269,7 +269,7 @@
                 var response_nik_pemohon = response.nik_pemohon;
                 var response_nik_penyetuju = response.nik_penyetuju;
 
-                var getnamapemohonpenyetuju = 'https://cobit.ptsi.co.id/public/dashboard/get-nama-pemohon-penyetuju';
+                var getnamapemohonpenyetuju = 'https://cobit-demo.ptsi.co.id/dashboard/get-nama-pemohon-penyetuju';
                 $.get(getnamapemohonpenyetuju)
                 .done((response) => {
                     let pemohonSelect = $('#modal-form [name=nik_pemohon]');
