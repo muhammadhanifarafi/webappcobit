@@ -286,7 +286,7 @@ class PerencanaanProyekController extends Controller
         $proyek = DB::table('trx_permintaan_pengembangan as tp')
                  ->leftJoin('trx_persetujuan_pengembangan as ts', 'tp.id_permintaan_pengembangan', '=', 'ts.id_permintaan_pengembangan')
                  ->where('ts.id_persetujuan_pengembangan', $request->id_persetujuan_pengembangan) 
-                 ->select('tp.nomor_dokumen', 'tp.id_permintaan_pengembangan', 'ts.id_persetujuan_pengembangan')
+                 ->select('tp.judul', 'tp.nomor_dokumen', 'tp.id_permintaan_pengembangan', 'ts.id_persetujuan_pengembangan')
                  ->first();
 
         // Cek Validasi Sudah Pengisian Tahap Sebelumnya atau Belum
@@ -615,7 +615,7 @@ class PerencanaanProyekController extends Controller
         $proyek = PerencanaanProyek::leftJoin('trx_persetujuan_pengembangan', 'trx_persetujuan_pengembangan.id_persetujuan_pengembangan', '=', 'trx_perencanaan_proyek.id_persetujuan_pengembangan')
                   ->leftJoin('trx_permintaan_pengembangan', 'trx_permintaan_pengembangan.id_permintaan_pengembangan', '=', 'trx_persetujuan_pengembangan.id_permintaan_pengembangan')
                   ->where('trx_perencanaan_proyek.id_perencanaan_proyek', $id)  // Sesuaikan dengan parameter ID yang Anda inginkan
-                  ->select('trx_perencanaan_proyek.*', 'trx_permintaan_pengembangan.nomor_dokumen', 'trx_permintaan_pengembangan.id_permintaan_pengembangan')  // Memilih semua kolom dari kedua tabel
+                  ->select('trx_perencanaan_proyek.*', 'trx_permintaan_pengembangan.judul', 'trx_permintaan_pengembangan.nomor_dokumen', 'trx_permintaan_pengembangan.id_permintaan_pengembangan')  // Memilih semua kolom dari kedua tabel
                   ->first();  // Ambil data pertama (karena kita menggunakan where ID)
 
         // Cek apakah progress sudah 100% dan file_pdf sudah terisi
@@ -664,6 +664,18 @@ class PerencanaanProyekController extends Controller
             $proyek->path_qrcode_pemverifikasi = $filePath;
             $proyek->path_qrcode_pemverifikasi = $filePath;
             $proyek->save();
+
+            $user = Users::where('nik', $proyek->nik_penyetuju)->first();
+            if ($user) {
+                $proyek->no_telp = $user->no_telp;
+            }
+
+            // Kirim pesan WhatsApp
+            $message = "Permintaan Pengembangan *{$proyek->judul}* telah diajukan oleh *{$proyek->nama_pengaju}* "
+                    . "\ndengan nomor dokumen *{$proyek->nomor_dokumen}* pada *" . now()->format('d F Y H:i:s') . "* "
+                    . "\ndan sedang menunggu disetujui oleh *{$proyek->nama_penyetuju}*.";
+
+            $this->whatsAppService->sendWhatsAppMessage($proyek->no_telp, $message);
 
             return response()->json(['success' => 'Proyek berhasil di-approve.']);
         }else if(auth()->user()->nik == $proyek->nik_penyetuju){
