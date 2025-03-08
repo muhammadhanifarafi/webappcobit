@@ -83,8 +83,7 @@ class PermintaanPengembanganController extends Controller
     {
         $trx_permintaan_pengembangan = PermintaanPengembangan::orderByRaw("trx_permintaan_pengembangan.is_approve asc, trx_permintaan_pengembangan.approve_at desc, trx_permintaan_pengembangan.created_at desc");
         $trx_permintaan_pengembangan = $trx_permintaan_pengembangan->where(function($query) {
-            $query->where('is_approve', '=', 1)
-                  ->orWhereNull('is_approve');
+            $query->where('is_approve', '=', 1);
         });
         if (auth()->user()->level == 5) {
             if(auth()->user()->level == 2 || auth()->user()->level == 3 || auth()->user()->level == 4 || auth()->user()->level == 6){
