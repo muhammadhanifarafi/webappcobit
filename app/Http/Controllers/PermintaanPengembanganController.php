@@ -843,7 +843,7 @@ class PermintaanPengembanganController extends Controller
 
         $user = Users::where('nik', $data['nik_penyetuju'])->first();
         if ($user) {
-            $data['no_telepon'] = $user->no_telepon;
+            $data['no_telp'] = $user->no_telp;
         }
 
         // Kirim pesan WhatsApp
@@ -851,7 +851,7 @@ class PermintaanPengembanganController extends Controller
                 . "Diapprove oleh: *{$data['nama_penyetuju']}*\n"
                 . "No Dokumen: *{$data['nomor_dokumen']}*\n"
                 . "Tanggal Dibuat: *" . now()->format('d F Y H:i:s') . "*";
-        $this->whatsAppService->sendWhatsAppMessage($data['no_telepon'], $message);
+        $this->whatsAppService->sendWhatsAppMessage($data['no_telp'], $message);
 
         return response()->json('Data berhasil disimpan', 200);
     }
