@@ -847,10 +847,10 @@ class PermintaanPengembanganController extends Controller
         }
 
         // Kirim pesan WhatsApp
-        $message = "Permintaan Pengembangan *{$data['judul']}* telah diajukan oleh *{$data['nama_pemohon']}* dan sedang menunggu untuk di approve.\n"
-                . "Diapprove oleh: *{$data['nama_penyetuju']}*\n"
-                . "No Dokumen: *{$data['nomor_dokumen']}*\n"
-                . "Tanggal Dibuat: *" . now()->format('d F Y H:i:s') . "*";
+        $message = "Permintaan Pengembangan *{$data['judul']}* telah diajukan oleh *{$data['nama_pemohon']}* "
+                . "\ndengan nomor dokumen *{$data['nomor_dokumen']}* pada *" . now()->format('d F Y H:i:s') . "* "
+                . "\ndan sedang menunggu untuk diapprove oleh *{$data['nama_penyetuju']}*.";
+
         $this->whatsAppService->sendWhatsAppMessage($data['no_telp'], $message);
 
         return response()->json('Data berhasil disimpan', 200);
