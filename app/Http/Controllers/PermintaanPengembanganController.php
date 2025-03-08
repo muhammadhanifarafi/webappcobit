@@ -14,6 +14,7 @@ use App\Models\AnalisisDesain;
 use App\Models\QualityAssuranceTesting;
 use App\Models\UserAcceptanceTesting;
 use App\Models\SerahTerimaAplikasi;
+use App\Models\Users;
 use App\Models\Setting;
 use App\Models\FlagStatus;
 use Illuminate\Support\Facades\DB;
@@ -840,12 +841,17 @@ class PermintaanPengembanganController extends Controller
             'flag' => 2
         ]);
 
+        $user = User::where('nik', $data['nik_penyetuju'])->first();
+        if ($user) {
+            $data['no_telepon'] = $user->no_telepon;
+        }
+
         // Kirim pesan WhatsApp
         $message = "Permintaan Pengembangan *{$data['judul']}* telah diajukan oleh *{$data['nama_pengaju']}* dan sedang menunggu untuk di approve.\n"
                 . "Diapprove oleh: *{$data['nama_penyetuju']}*\n"
                 . "No Dokumen: *{$data['nomor_dokumen']}*\n"
                 . "Tanggal Dibuat: *" . now()->format('d F Y H:i:s') . "*";
-        $this->whatsAppService->sendWhatsAppMessage(auth()->user()->no_telp, $message);
+        $this->whatsAppService->sendWhatsAppMessage($data['no_telp_penyetuju'], $message);
 
         return response()->json('Data berhasil disimpan', 200);
     }
