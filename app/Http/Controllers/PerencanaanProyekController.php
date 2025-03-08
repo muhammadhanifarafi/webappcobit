@@ -671,7 +671,7 @@ class PerencanaanProyekController extends Controller
             }
 
             // Kirim pesan WhatsApp
-            $message = "Permintaan Pengembangan *{$proyek->judul}* telah diajukan oleh *{$proyek->nama_pengaju}* "
+            $message = "Permintaan Pengembangan *{$proyek->judul}* telah diajukan oleh *{$proyek->nama_pemohon}* "
                     . "\ndengan nomor dokumen *{$proyek->nomor_dokumen}* pada *" . now()->format('d F Y H:i:s') . "* "
                     . "\ndan sedang menunggu disetujui oleh *{$proyek->nama_penyetuju}*.";
 
