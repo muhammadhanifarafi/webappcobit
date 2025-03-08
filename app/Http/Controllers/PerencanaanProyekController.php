@@ -18,9 +18,17 @@ use Endroid\QrCode\Logo\Logo;
 use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\ValidationException;
+use App\Services\WhatsAppService;
 
 class PerencanaanProyekController extends Controller
 {
+    protected $whatsAppService;
+
+    // Injeksi WhatsAppService melalui konstruktor
+    public function __construct(WhatsAppService $whatsAppService)
+    {
+        $this->whatsAppService = $whatsAppService;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -394,6 +402,18 @@ class PerencanaanProyekController extends Controller
                 'id_tabel' => $lastId,
                 'flag' => 3
             ]);
+
+            $user = Users::where('nik', $data['nik_pemverifikasi'])->first();
+            if ($user) {
+                $data['no_telp'] = $user->no_telp;
+            }
+
+            // Kirim pesan WhatsApp
+            $message = "Permintaan Pengembangan *{$request->judul}* telah diajukan oleh *{$request->nama_pemohon}* "
+                    . "\ndengan nomor dokumen *{$proyek->nomor_dokumen}* pada *" . now()->format('d F Y H:i:s') . "* "
+                    . "\ndan sedang menunggu diverifikasi oleh *{$request->nama_pemverifikasi}*.";
+
+            $this->whatsAppService->sendWhatsAppMessage($data['no_telp'], $message);
 
             return response()->json('Data berhasil disimpan', 200);
         // }else{
