@@ -351,22 +351,29 @@ class PerencanaanProyekController extends Controller
 
         // if (count($result) > 0) {
 
-            $lastNoDocument = PerencanaanProyek::orderBy('nomor_proyek', 'desc')->first();
+                // Ambil nomor dokumen terakhir berdasarkan id terakhir
+                $lastNoDocument = PerencanaanProyek::orderBy('id_perencanaan_proyek', 'desc')->first();
 
-            if (!$lastNoDocument || date('Y') != date('Y', strtotime($lastNoDocument->created_at))) {
-                $number = 1;
-            } else {
-                $number = intval($lastNoDocument->nomor_proyek) + 1;
-            }
+                if (!$lastNoDocument) {
+                    // Jika tidak ada dokumen sebelumnya, nomor mulai dari 1
+                    $number = 1;
+                } else {
+                    // Ambil nomor urut dari dokumen terakhir
+                    preg_match('/^(\d+)/', $lastNoDocument->nomor_proyek, $matches);
+                    $number = isset($matches[1]) ? intval($matches[1]) + 1 : 1;
+                }
 
-            $formattedNumber = str_pad($number, 4, '0', STR_PAD_LEFT);
+                // Format nomor dokumen dengan padding 4 digit
+                $formattedNumber = str_pad($number, 4, '0', STR_PAD_LEFT);
+
+                // Tentukan bulan dan tahun sekarang
+                $months = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+                $currentMonth = $months[date('n') - 1];
+                $currentYear = date('Y');
+
+                // Set nomor dokumen yang baru
+                $data['nomor_proyek'] = "{$formattedNumber}/{$currentMonth}/PYK/DTI/{$currentYear}";
             
-            $months = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
-            $currentMonth = $months[date('n') - 1];
-            
-            $currentYear = date('Y');
-            
-            $data['nomor_proyek'] = "{$formattedNumber}/{$currentMonth}/PYK/DTI/{$currentYear}";  
 
             if ($request->hasFile('lampiran')) {
                 $file = $request->file('lampiran');
@@ -410,7 +417,7 @@ class PerencanaanProyekController extends Controller
             }
 
             // Kirim pesan WhatsApp
-            $message = "Permintaan Pengembangan *{$request->judul}* telah diajukan oleh *{$request->nama_pemohon}* "
+            $message = "Perencanaan Proyek *{$request->judul}* telah diajukan oleh *{$request->nama_pemohon}* "
                     . "\ndengan nomor dokumen *{$proyek->nomor_dokumen}* pada *" . now()->format('d F Y H:i:s') . "* "
                     . "\ndan sedang menunggu diverifikasi oleh *{$request->nama_pemverifikasi}*.";
 
@@ -671,7 +678,7 @@ class PerencanaanProyekController extends Controller
             }
 
             // Kirim pesan WhatsApp
-            $message = "Permintaan Pengembangan *{$proyek->judul}* telah diajukan oleh *{$proyek->nama_pemohon}* "
+            $message = "Perencanaan Proyek *{$proyek->judul}* telah diajukan oleh *{$proyek->nama_pemohon}* "
                     . "\ndengan nomor dokumen *{$proyek->nomor_dokumen}* pada *" . now()->format('d F Y H:i:s') . "* "
                     . "\ndan sedang menunggu disetujui oleh *{$proyek->nama_penyetuju}*.";
 
