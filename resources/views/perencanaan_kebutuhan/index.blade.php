@@ -190,15 +190,8 @@ table.dataTable td.kebutuhan_nonfungsional {
         $('#modal-form [name=_method]').val('post');
         $('#modal-form [name=nama_proyek]').focus();
 
-<<<<<<< Updated upstream
-        var getnamapemohon = 'https://cobit-demo.ptsi.co.id/dashboard/get-nama-pemohon';
-=======
-<<<<<<< Updated upstream
-        var getnamapemohon = 'https://cobit.ptsi.co.id/dashboard/get-nama-pemohon';
-=======
         var getnamapemohon = `${window.location.origin}/dashboard/get-nama-pemohon`;
->>>>>>> Stashed changes
->>>>>>> Stashed changes
+
         $.get(getnamapemohon)
         .done((response) => {
             let pemohonSelect = $('#modal-form [name=nik_pemohon]');
@@ -216,16 +209,8 @@ table.dataTable td.kebutuhan_nonfungsional {
             alert('Tidak dapat mengambil data pemohon');
             return;
         });
-
-<<<<<<< Updated upstream
-        var getnamapemverifikasi = 'https://cobit-demo.ptsi.co.id/dashboard/get-nama-pemverifikasi';
-=======
-<<<<<<< Updated upstream
-        var getnamapemverifikasi = 'https://cobit.ptsi.co.id/dashboard/get-nama-pemverifikasi';
-=======
         var getnamapemverifikasi = `${window.location.origin}/dashboard/get-nama-pemverifikasi`;
->>>>>>> Stashed changes
->>>>>>> Stashed changes
+
         $.get(getnamapemverifikasi)
         .done((response) => {
             let pemverifikasiSelect = $('#modal-form #nik_pemverifikasi');
@@ -243,15 +228,9 @@ table.dataTable td.kebutuhan_nonfungsional {
             alert('Tidak dapat mengambil data pemverifikasi');
             return;
         });
-<<<<<<< Updated upstream
-        var getnamapenyetuju = 'https://cobit-demo.ptsi.co.id/dashboard/get-nama-penyetuju';
-=======
-<<<<<<< Updated upstream
-        var getnamapenyetuju = 'https://cobit.ptsi.co.id/dashboard/get-nama-penyetuju';
-=======
+
         var getnamapenyetuju = `${window.location.origin}/dashboard/get-nama-penyetuju`;
->>>>>>> Stashed changes
->>>>>>> Stashed changes
+
         $.get(getnamapenyetuju)
         .done((response) => {
             let penyetujuSelect = $('#modal-form #nik_penyetuju');
@@ -274,15 +253,7 @@ table.dataTable td.kebutuhan_nonfungsional {
     // On Change Atribut
     $("#modal-form [name=nik_pemohon]").on('change', function() {
             var nik = $(this).val();
-<<<<<<< Updated upstream
-            var url_link_get_identity_by_nik = 'https://cobit-demo.ptsi.co.id/dashboard/get-identity-by-nik/' + nik;
-=======
-<<<<<<< Updated upstream
-            var url_link_get_identity_by_nik = 'https://cobit.ptsi.co.id/dashboard/get-identity-by-nik/' + nik;
-=======
             var url_link_get_identity_by_nik = `${window.location.origin}/dashboard/get-identity-by-nik/` + nik;
->>>>>>> Stashed changes
->>>>>>> Stashed changes
             
             $.get(url_link_get_identity_by_nik)
             .done((response) => {
@@ -297,15 +268,7 @@ table.dataTable td.kebutuhan_nonfungsional {
 
     $("#modal-form [name=nik_pemverifikasi]").on('change', function() {
             var nik = $(this).val();
-<<<<<<< Updated upstream
-            var url_link_get_identity_by_nik = 'https://cobit-demo.ptsi.co.id/dashboard/get-identity-by-nik/' + nik;
-=======
-<<<<<<< Updated upstream
-            var url_link_get_identity_by_nik = 'https://cobit.ptsi.co.id/dashboard/get-identity-by-nik/' + nik;
-=======
             var url_link_get_identity_by_nik = `${window.location.origin}/dashboard/get-identity-by-nik/` + nik;
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 
             $.get(url_link_get_identity_by_nik)
             .done((response) => {
@@ -320,15 +283,7 @@ table.dataTable td.kebutuhan_nonfungsional {
 
     $("#modal-form [name=nik_penyetuju]").on('change', function() {
             var nik = $(this).val();
-<<<<<<< Updated upstream
-            var url_link_get_identity_by_nik = 'https://cobit-demo.ptsi.co.id/dashboard/get-identity-by-nik/' + nik;
-=======
-<<<<<<< Updated upstream
-            var url_link_get_identity_by_nik = 'https://cobit.ptsi.co.id/dashboard/get-identity-by-nik/' + nik;
-=======
             var url_link_get_identity_by_nik = `${window.location.origin}/dashboard/get-identity-by-nik/` + nik;
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 
             $.get(url_link_get_identity_by_nik)
             .done((response) => {
@@ -382,15 +337,8 @@ table.dataTable td.kebutuhan_nonfungsional {
                 var response_nik_pemverifikasi = response.nik_pemverifikasi;
                 var response_nik_penyetuju = response.nik_penyetuju;
 
-<<<<<<< Updated upstream
-                var getnamapemohon = 'https://cobit-demo.ptsi.co.id/dashboard/get-nama-pemohon';
-=======
-<<<<<<< Updated upstream
-                var getnamapemohon = 'https://cobit.ptsi.co.id/dashboard/get-nama-pemohon';
-=======
                 var getnamapemohon = `${window.location.origin}/dashboard/get-nama-pemohon`;
->>>>>>> Stashed changes
->>>>>>> Stashed changes
+                
                 $.get(getnamapemohon)
                 .done((response) => {
                     let pemohonSelect = $('#modal-form [name=nik_pemohon]');
@@ -409,15 +357,8 @@ table.dataTable td.kebutuhan_nonfungsional {
                     return;
                 });
 
-<<<<<<< Updated upstream
-                var getnamapemverifikasi = 'https://cobit-demo.ptsi.co.id/dashboard/get-nama-pemverifikasi';
-=======
-<<<<<<< Updated upstream
-                var getnamapemverifikasi = 'https://cobit.ptsi.co.id/dashboard/get-nama-pemverifikasi';
-=======
                 var getnamapemverifikasi = `${window.location.origin}/dashboard/get-nama-pemverifikasi`;
->>>>>>> Stashed changes
->>>>>>> Stashed changes
+
                 $.get(getnamapemverifikasi)
                 .done((response) => {
                     let pemverifikasiSelect = $('#modal-form #nik_pemverifikasi');
@@ -436,15 +377,8 @@ table.dataTable td.kebutuhan_nonfungsional {
                     return;
                 });
 
-<<<<<<< Updated upstream
-                var getnamapenyetuju = 'https://cobit-demo.ptsi.co.id/dashboard/get-nama-penyetuju';
-=======
-<<<<<<< Updated upstream
-                var getnamapenyetuju = 'https://cobit.ptsi.co.id/dashboard/get-nama-penyetuju';
-=======
                 var getnamapenyetuju = `${window.location.origin}/dashboard/get-nama-penyetuju`;
->>>>>>> Stashed changes
->>>>>>> Stashed changes
+
                 $.get(getnamapenyetuju)
                 .done((response) => {
                     let penyetujuSelect = $('#modal-form #nik_penyetuju');

@@ -132,15 +132,8 @@
         $('#modal-form [name=_method]').val('post');
         $('#modal-form [name=nomor_proyek]').focus();
 
-<<<<<<< Updated upstream
-        var getnamapemohonpenyetuju = 'https://cobit-demo.ptsi.co.id/dashboard/get-nama-pemohon-penyetuju';
-=======
-<<<<<<< Updated upstream
-        var getnamapemohonpenyetuju = 'https://cobit.ptsi.co.id/dashboard/get-nama-pemohon-penyetuju';
-=======
         var getnamapemohonpenyetuju = `${window.location.origin}/dashboard/get-nama-pemohon-penyetuju`;
->>>>>>> Stashed changes
->>>>>>> Stashed changes
+
         $.get(getnamapemohonpenyetuju)
         .done((response) => {
             let pemohonSelect = $('#modal-form [name=nik_pemohon]');
@@ -174,15 +167,7 @@
     // On Change Atribut
     $("#modal-form [name=nik_pemohon]").on('change', function() {
             var nik = $(this).val();
-<<<<<<< Updated upstream
-            var url_link_get_identity_by_nik = 'https://cobit-demo.ptsi.co.id/dashboard/get-identity-by-nik/' + nik;
-=======
-<<<<<<< Updated upstream
-            var url_link_get_identity_by_nik = 'https://cobit.ptsi.co.id/dashboard/get-identity-by-nik/' + nik;
-=======
             var url_link_get_identity_by_nik = `${window.location.origin}/dashboard/get-identity-by-nik/` + nik;
->>>>>>> Stashed changes
->>>>>>> Stashed changes
             
             $.get(url_link_get_identity_by_nik)
             .done((response) => {
@@ -197,15 +182,7 @@
 
     $("#modal-form [name=nik_penyetuju]").on('change', function() {
             var nik = $(this).val();
-<<<<<<< Updated upstream
-            var url_link_get_identity_by_nik = 'https://cobit-demo.ptsi.co.id/dashboard/get-identity-by-nik/' + nik;
-=======
-<<<<<<< Updated upstream
-            var url_link_get_identity_by_nik = 'https://cobit.ptsi.co.id/dashboard/get-identity-by-nik/' + nik;
-=======
             var url_link_get_identity_by_nik = `${window.location.origin}/dashboard/get-identity-by-nik/` + nik;
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 
             $.get(url_link_get_identity_by_nik)
             .done((response) => {
@@ -259,15 +236,7 @@
                 var response_nik_pemohon = response.nik_pemohon;
                 var response_nik_penyetuju = response.nik_penyetuju;
 
-<<<<<<< Updated upstream
-                var getnamapemohonpenyetuju = 'https://cobit-demo.ptsi.co.id/dashboard/get-nama-pemohon-penyetuju';
-=======
-<<<<<<< Updated upstream
-                var getnamapemohonpenyetuju = 'https://cobit.ptsi.co.id/dashboard/get-nama-pemohon-penyetuju';
-=======
                 var getnamapemohonpenyetuju = `${window.location.origin}/dashboard/get-nama-pemohon-penyetuju`;
->>>>>>> Stashed changes
->>>>>>> Stashed changes
                 $.get(getnamapemohonpenyetuju)
                 .done((response) => {
                     let pemohonSelect = $('#modal-form [name=nik_pemohon]');
