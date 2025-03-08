@@ -744,22 +744,28 @@ class PermintaanPengembanganController extends Controller
             'created_by' => auth()->user()->id,
         ];
 
-        $lastNoDocument = PermintaanPengembangan::orderBy('nomor_dokumen', 'desc')->first();
+        // Ambil nomor dokumen terakhir berdasarkan id terakhir
+        $lastNoDocument = PermintaanPengembangan::orderBy('id_permintaan_pengembangan', 'desc')->first();
 
-        if (!$lastNoDocument || date('Y') != date('Y', strtotime($lastNoDocument->created_at))) {
+        if (!$lastNoDocument) {
+            // Jika tidak ada dokumen sebelumnya, nomor mulai dari 1
             $number = 1;
         } else {
-            $number = intval($lastNoDocument->nomor_dokumen) + 1;
+            // Ambil nomor urut dari dokumen terakhir
+            preg_match('/^(\d+)/', $lastNoDocument->nomor_dokumen, $matches);
+            $number = isset($matches[1]) ? intval($matches[1]) + 1 : 1;
         }
-        
+
+        // Format nomor dokumen dengan padding 4 digit
         $formattedNumber = str_pad($number, 4, '0', STR_PAD_LEFT);
-        
+
+        // Tentukan bulan dan tahun sekarang
         $months = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
         $currentMonth = $months[date('n') - 1];
-        
         $currentYear = date('Y');
-        
-        $data['nomor_dokumen'] = "{$formattedNumber}/{$currentMonth}/DTI/{$currentYear}";      
+
+        // Set nomor dokumen yang baru
+        $data['nomor_dokumen'] = "{$formattedNumber}/{$currentMonth}/DTI/{$currentYear}";
 
         if ($request->hasFile('lampiran')) {
             $file = $request->file('lampiran');
