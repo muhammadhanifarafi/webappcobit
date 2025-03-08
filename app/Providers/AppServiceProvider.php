@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Setting;
 use Illuminate\Support\ServiceProvider;
+use App\Services\WhatsAppService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,6 +23,9 @@ class AppServiceProvider extends ServiceProvider
         });
         view()->composer('auth.login', function ($view) {
             $view->with('setting', Setting::first());
+        });
+        $this->app->singleton(WhatsAppService::class, function ($app) {
+            return new WhatsAppService();
         });
     }
 

@@ -131,7 +131,7 @@
                     success: function(response) {
                         $('#modal-form').modal('hide');
                         // table.ajax.reload();
-                        window.location.href = 'http://127.0.0.1:8000/permintaan_pengembangan/index2';
+                        window.location.href = `${window.location.origin}/permintaan_pengembangan/index2`;
                     },
                     error: function(errors) {
                         alert('Tidak dapat menyimpan data');
@@ -156,7 +156,15 @@
         $('#modal-form [name=_method]').val('post');
         $('#modal-form [name=nomor_dokumen]').focus();
 
+<<<<<<< Updated upstream
         var getnamapemohon = 'https://cobit-demo.ptsi.co.id/dashboard/get-nama-pemohon';
+=======
+<<<<<<< Updated upstream
+        var getnamapemohon = 'https://cobit.ptsi.co.id/dashboard/get-nama-pemohon';
+=======
+        var getnamapemohon = `${window.location.origin}/dashboard/get-nama-pemohon`;
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
         $.get(getnamapemohon)
         .done((response) => {
             let pemohonSelect = $('#modal-form [name=nik_pemohon]');
@@ -175,7 +183,15 @@
             return;
         });
 
+<<<<<<< Updated upstream
         var getnamapenyetuju = 'https://cobit-demo.ptsi.co.id/dashboard/get-nama-penyetuju';
+=======
+<<<<<<< Updated upstream
+        var getnamapenyetuju = 'https://cobit.ptsi.co.id/dashboard/get-nama-penyetuju';
+=======
+        var getnamapenyetuju = `${window.location.origin}/dashboard/get-nama-penyetuju`;
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
         $.get(getnamapenyetuju)
         .done((response) => {
             let penyetujuSelect = $('#modal-form #nik_penyetuju');
@@ -198,7 +214,15 @@
     // On Change Atribut
     $("#modal-form [name=nik_pemohon]").on('change', function() {
             var nik = $(this).val();
+<<<<<<< Updated upstream
             var url_link_get_identity_by_nik = 'https://cobit-demo.ptsi.co.id/dashboard/get-identity-by-nik/' + nik;
+=======
+<<<<<<< Updated upstream
+            var url_link_get_identity_by_nik = 'https://cobit.ptsi.co.id/dashboard/get-identity-by-nik/' + nik;
+=======
+            var url_link_get_identity_by_nik = `${window.location.origin}/dashboard/get-identity-by-nik/` + nik;
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
             
             $.get(url_link_get_identity_by_nik)
             .done((response) => {
@@ -213,7 +237,15 @@
 
     $("#modal-form [name=nik_penyetuju]").on('change', function() {
             var nik = $(this).val();
+<<<<<<< Updated upstream
             var url_link_get_identity_by_nik = 'https://cobit-demo.ptsi.co.id/dashboard/get-identity-by-nik/' + nik;
+=======
+<<<<<<< Updated upstream
+            var url_link_get_identity_by_nik = 'https://cobit.ptsi.co.id/dashboard/get-identity-by-nik/' + nik;
+=======
+            var url_link_get_identity_by_nik = `${window.location.origin}/dashboard/get-identity-by-nik/` + nik;
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 
             $.get(url_link_get_identity_by_nik)
             .done((response) => {
@@ -270,7 +302,15 @@
                 var response_nik_pemohon = response.nik_pemohon;
                 var response_nik_penyetuju = response.nik_penyetuju;
 
+<<<<<<< Updated upstream
                 var getnamapemohon = 'https://cobit-demo.ptsi.co.id/dashboard/get-nama-pemohon';
+=======
+<<<<<<< Updated upstream
+                var getnamapemohon = 'https://cobit.ptsi.co.id/dashboard/get-nama-pemohon';
+=======
+                var getnamapemohon = `${window.location.origin}/dashboard/get-nama-pemohon`;
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
                 $.get(getnamapemohon)
                 .done((response) => {
                     let pemohonSelect = $('#modal-form [name=nik_pemohon]');
@@ -289,7 +329,15 @@
                     return;
                 });
 
+<<<<<<< Updated upstream
                 var getnamapenyetuju = 'https://cobit-demo.ptsi.co.id/dashboard/get-nama-penyetuju';
+=======
+<<<<<<< Updated upstream
+                var getnamapenyetuju = 'https://cobit.ptsi.co.id/dashboard/get-nama-penyetuju';
+=======
+                var getnamapenyetuju = `${window.location.origin}/dashboard/get-nama-penyetuju`;
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
                 $.get(getnamapenyetuju)
                 .done((response) => {
                     let penyetujuSelect = $('#modal-form #nik_penyetuju');
@@ -582,7 +630,8 @@
                 
                 // Refresh halaman
                 // location.reload();
-                window.location.href = 'http://127.0.0.1:8000/permintaan_pengembangan/index2';
+                window.location.href = 
+`${window.location.origin}/permintaan_pengembangan/index2';
             },
             error: function(xhr) {
                 alert('Terjadi kesalahan, coba lagi nanti.');

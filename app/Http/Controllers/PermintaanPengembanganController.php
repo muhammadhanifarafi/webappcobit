@@ -27,9 +27,17 @@ use Endroid\QrCode\Logo\Logo;
 use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\ValidationException;
+use App\Services\WhatsAppService;
 
 class PermintaanPengembanganController extends Controller
 {
+    protected $whatsAppService;
+
+    // Injeksi WhatsAppService melalui konstruktor
+    public function __construct(WhatsAppService $whatsAppService)
+    {
+        $this->whatsAppService = $whatsAppService;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -386,11 +394,11 @@ class PermintaanPengembanganController extends Controller
         $trx_permintaan_pengembangan = [];
 
         foreach (PermintaanPengembangan::all() as $data) {
-            if (auth()->user()->level != 2) {
-                if (auth()->user()->id == $data->created_by) {
-                    $trx_permintaan_pengembangan[] = $data;
-                }
-            } else {
+            if (auth()->user()->level == 2 || auth()->user()->level == 1) {
+                $trx_permintaan_pengembangan[] = $data;
+            } elseif (auth()->user()->level == 3 && (auth()->user()->nik == $data->nik_penyetuju || auth()->user()->nik == $data->nik_pemverifikasi)) {
+                $trx_permintaan_pengembangan[] = $data;
+            } elseif (auth()->user()->id == $data->created_by) {
                 $trx_permintaan_pengembangan[] = $data;
             }
         }
@@ -1120,36 +1128,36 @@ class PermintaanPengembanganController extends Controller
         // Ambil data proyek berdasarkan id
         $proyek = PermintaanPengembangan::findOrFail($id);
         $persetujuan_pengembangan_approve = new PersetujuanPengembangan();
-
-        // Update status proyek menjadi approved (Anda dapat menambah field status_approval di tabel)
+    
+        // Update status proyek menjadi approved
         $proyek->is_approve = 1;
         $proyek->approve_at = now(); // Set tanggal persetujuan saat ini
         $proyek->approve_by = auth()->user()->name; // Set tanggal persetujuan saat ini
         $proyek->tanggal_disetujui = now(); // Set tanggal persetujuan saat ini
-
+    
         // Save Persetujuan Pengembangan
         $persetujuan_pengembangan_approve->id_permintaan_pengembangan = $proyek->id_permintaan_pengembangan;
-        $persetujuan_pengembangan_approve->id_mst_persetujuan = $proyek->id_mst_persetujuan; // Misalnya, ini ada pada proyek
-        $persetujuan_pengembangan_approve->id_mst_persetujuanalasan = $proyek->id_mst_persetujuanalasan; // Jika ada
+        $persetujuan_pengembangan_approve->id_mst_persetujuan = $proyek->id_mst_persetujuan;
+        $persetujuan_pengembangan_approve->id_mst_persetujuanalasan = $proyek->id_mst_persetujuanalasan;
         $persetujuan_pengembangan_approve->nama_pemohon = $proyek->nama_pemohon;
         $persetujuan_pengembangan_approve->jabatan_pemohon = $proyek->jabatan_pemohon;
-        $persetujuan_pengembangan_approve->tanggal_disiapkan = $proyek->tanggal_disiapkan; // Atau kamu bisa menyesuaikan dengan tanggal yang sesuai
-        $persetujuan_pengembangan_approve->nama_penyetuju = $proyek->nama_penyetuju; // Atau data dari penyetuju
-        $persetujuan_pengembangan_approve->jabatan_penyetuju = $proyek->jabatan_penyetuju; // Sesuaikan dengan data penyetuju
-        $persetujuan_pengembangan_approve->tanggal_disetujui = now(); // Atau tanggal disetujui jika ada
-        $persetujuan_pengembangan_approve->file_pdf = $proyek->file_pdf; // Salin file PDF jika ada
-        $persetujuan_pengembangan_approve->progress = '0'; // Atau progres yang relevan
-        $persetujuan_pengembangan_approve->is_approve = 1; // Atur status approval, misalnya 0 untuk belum disetujui
-        $persetujuan_pengembangan_approve->approve_at = now(); // Atur waktu approval jika belum disetujui
-        $persetujuan_pengembangan_approve->approve_by = auth()->user()->name; // Atur siapa yang menyetujui jika belum
-        $persetujuan_pengembangan_approve->is_approve_penyetuju = null; // Status approval penyetuju
-        $persetujuan_pengembangan_approve->approve_at_penyetuju = null; // Waktu approval penyetuju
-        $persetujuan_pengembangan_approve->approve_by_penyetuju = null; // Penyetuju siapa yang memberikan approval
+        $persetujuan_pengembangan_approve->tanggal_disiapkan = $proyek->tanggal_disiapkan;
+        $persetujuan_pengembangan_approve->nama_penyetuju = $proyek->nama_penyetuju;
+        $persetujuan_pengembangan_approve->jabatan_penyetuju = $proyek->jabatan_penyetuju;
+        $persetujuan_pengembangan_approve->tanggal_disetujui = now();
+        $persetujuan_pengembangan_approve->file_pdf = $proyek->file_pdf;
+        $persetujuan_pengembangan_approve->progress = '0';
+        $persetujuan_pengembangan_approve->is_approve = 1;
+        $persetujuan_pengembangan_approve->approve_at = now();
+        $persetujuan_pengembangan_approve->approve_by = auth()->user()->name;
+        $persetujuan_pengembangan_approve->is_approve_penyetuju = null;
+        $persetujuan_pengembangan_approve->approve_at_penyetuju = null;
+        $persetujuan_pengembangan_approve->approve_by_penyetuju = null;
         $persetujuan_pengembangan_approve->nik_pemohon = $proyek->nik_pemohon;
         $persetujuan_pengembangan_approve->nik_penyetuju = $proyek->nik_penyetuju;
-        $persetujuan_pengembangan_approve->created_by = $proyek->created_by; // ID pengguna yang membuat data, bisa menyesuaikan
+        $persetujuan_pengembangan_approve->created_by = $proyek->created_by;
         $persetujuan_pengembangan_approve->path_qrcode_pemohon = $proyek->path_qrcode_pemohon;
-
+    
         $persetujuan_pengembangan_approve->id_mst_persetujuan = $request->id_mst_persetujuan;
         $persetujuan_pengembangan_approve->id_mst_persetujuanalasan = $request->id_mst_persetujuanalasan;
     
@@ -1159,42 +1167,49 @@ class PermintaanPengembanganController extends Controller
                     '<br> Nomor Dokumen : ' . $proyek->nomor_dokumen .
                     '<br> NIK Karyawan : ' . $proyek->nik_penyetuju . 
                     '<br> Tanggal Disetujui : ' . now(); 
-        
+    
         // Sanitize nomor_dokumen to remove slashes and create a valid filename
-        $safeNomorDokumen = str_replace('/', '', $proyek->nomor_dokumen);  // Remove slashes
+        $safeNomorDokumen = str_replace('/', '', $proyek->nomor_dokumen);
         $fileName = '' . 'qr_code_permintaanpengembangan_penyetuju_' . $proyek->id_permintaan_pengembangan . '_' . $safeNomorDokumen . '.png';
         $filePath = 'storage/assets/qrcode/' . $fileName;
-
+    
         // Create QR code instance with additional settings
         $qrCode = new QrCode(
             data: $qrContent,
             encoding: new Encoding('UTF-8'),
-            errorCorrectionLevel: ErrorCorrectionLevel::Medium,  // Set to 'Medium' error correction
-            size: 500,  // Set size to 500px
-            margin: 10, // Set margin
+            errorCorrectionLevel: ErrorCorrectionLevel::Medium,
+            size: 500,
+            margin: 10,
             roundBlockSizeMode: RoundBlockSizeMode::Margin,
-            foregroundColor: new Color(0, 0, 0),  // Black foreground color
-            backgroundColor: new Color(255, 255, 255) // White background color
+            foregroundColor: new Color(0, 0, 0),
+            backgroundColor: new Color(255, 255, 255)
         );
-
+    
         // Write the QR code with label (no logo here)
         $writer = new PngWriter();
-
+    
         // Generate the image content of the QR code and save to file
-        $result = $writer->write($qrCode, null, null);  // No logo, just label
-
+        $result = $writer->write($qrCode, null, null); 
+    
         // Save the QR code image to the specified file path
-        $filePathWithPublicPath = public_path($filePath);  // Full file path with public_path
-        file_put_contents($filePathWithPublicPath, $result->getString());  // Save the file content
-
-        // Store the path to the database (e.g., store in 'path_qrcode' column)
+        $filePathWithPublicPath = public_path($filePath);
+        file_put_contents($filePathWithPublicPath, $result->getString());  
+    
+        // Store the path to the database
         $persetujuan_pengembangan_approve->path_qrcode_penyetuju = $filePath;
         $proyek->path_qrcode_penyetuju = $filePath;
-
+    
         // Menyimpan data ke tabel Proyek
         $persetujuan_pengembangan_approve->save();
         $proyek->save();
-
-        return response()->json(['success' => 'QR code generated and saved successfully.']);
-    }
+    
+        // Kirim pesan WhatsApp
+        $message = "Permintaan Pengembangan *{$proyek->judul}* telah berhasil disetujui.\n"
+                 . "Penyetuju: *{$proyek->nama_penyetuju}*\n"
+                 . "No Dokumen: *{$proyek->nomor_dokumen}*\n"
+                 . "Tanggal Disetujui: *" . now()->format('j F Y H:i:s') . "*";
+        $this->whatsAppService->sendWhatsAppMessage(auth()->user()->no_telp, $message);
+    
+        return response()->json(['success' => 'QR code generated, saved, and WhatsApp message sent successfully.']);
+    }    
 }

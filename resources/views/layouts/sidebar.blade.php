@@ -21,7 +21,7 @@
                     <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                 </a>
             </li> -->
-            @if (auth()->user()->level == 2 || auth()->user()->level == 5)
+            @if (auth()->user()->level == 2 || auth()->user()->level == 5 || auth()->user()->level == 3 || auth()->user()->level == 1)
                 <li>
                     <a href="{{ route('permintaan_pengembangan.index3') }}">
                         <i class="fa fa-map-o"></i> <span>List Project</span>
