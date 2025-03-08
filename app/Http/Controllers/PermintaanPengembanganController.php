@@ -1214,13 +1214,24 @@ class PermintaanPengembanganController extends Controller
         // Menyimpan data ke tabel Proyek
         $persetujuan_pengembangan_approve->save();
         $proyek->save();
+
+        // Cari data user berdasarkan nik pemohon
+        $user = Users::where('nik', $proyek->nik_pemohon)->first();
+        
+        if ($user) {
+            // Update no_telp di tabel Proyek
+            $proyek->no_telp = $user->no_telp;
+        } else {
+            // Kembali dengan respon error jika tidak ada data user
+            return response()->json(['error' => 'Tidak ada data user dengan NIK ' . $proyek->nik_pemohon], 404);
+        }
     
         // Kirim pesan WhatsApp
         $message = "Permintaan Pengembangan *{$proyek->judul}* telah berhasil disetujui.\n"
                  . "Penyetuju: *{$proyek->nama_penyetuju}*\n"
                  . "No Dokumen: *{$proyek->nomor_dokumen}*\n"
-                 . "Tanggal Disetujui: *" . now()->format('j F Y H:i:s') . "*";
-        $this->whatsAppService->sendWhatsAppMessage(auth()->user()->no_telp, $message);
+                 . "Tanggal Disetujui: *" . now()->format('j F Y H:i') . "*";
+        $this->whatsAppService->sendWhatsAppMessage($proyek->no_telp, $message);
     
         return response()->json(['success' => 'QR code generated, saved, and WhatsApp message sent successfully.']);
     }    
