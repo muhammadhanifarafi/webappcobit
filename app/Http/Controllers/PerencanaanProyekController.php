@@ -18,6 +18,7 @@ use Endroid\QrCode\Logo\Logo;
 use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\ValidationException;
+use App\Models\Users;
 use App\Services\WhatsAppService;
 
 class PerencanaanProyekController extends Controller
