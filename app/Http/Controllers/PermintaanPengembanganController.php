@@ -1227,10 +1227,8 @@ class PermintaanPengembanganController extends Controller
         }
     
         // Kirim pesan WhatsApp
-        $message = "Permintaan Pengembangan *{$proyek->judul}* telah berhasil disetujui.\n"
-                 . "Penyetuju: *{$proyek->nama_penyetuju}*\n"
-                 . "No Dokumen: *{$proyek->nomor_dokumen}*\n"
-                 . "Tanggal Disetujui: *" . now()->format('j F Y H:i') . "*";
+        $message = "Permintaan Pengembangan *{$proyek->judul}* telah berhasil disetujui oleh *{$proyek->nama_penyetuju}* "
+                 . "\ndengan nomor dokumen *{$proyek->nomor_dokumen}* pada *" . now()->format('j F Y H:i') . "*.";
         $this->whatsAppService->sendWhatsAppMessage($proyek->no_telp, $message);
     
         return response()->json(['success' => 'QR code generated, saved, and WhatsApp message sent successfully.']);
