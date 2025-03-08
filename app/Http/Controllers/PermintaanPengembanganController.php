@@ -841,7 +841,7 @@ class PermintaanPengembanganController extends Controller
             'flag' => 2
         ]);
 
-        $user = User::where('nik', $data['nik_penyetuju'])->first();
+        $user = Users::where('nik', $data['nik_penyetuju'])->first();
         if ($user) {
             $data['no_telepon'] = $user->no_telepon;
         }
