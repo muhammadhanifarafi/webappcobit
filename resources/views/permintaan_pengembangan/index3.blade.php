@@ -582,8 +582,7 @@
                 
                 // Refresh halaman
                 // location.reload();
-                window.location.href = 
-`${window.location.origin}/permintaan_pengembangan/index2';
+                window.location.href = `${window.location.origin}/permintaan_pengembangan/index2`;
             },
             error: function(xhr) {
                 alert('Terjadi kesalahan, coba lagi nanti.');
