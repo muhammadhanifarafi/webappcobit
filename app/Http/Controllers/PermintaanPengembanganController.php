@@ -607,6 +607,14 @@ class PermintaanPengembanganController extends Controller
                         ) : 
                         "<tr><td colspan='2'>{$modul[0]}</td><td colspan='2' class='text-left'><span class='text-danger font-weight-bold' style='background-color: yellow;'>Belum Dibuat</td></tr>";
                 }
+
+                $html .= '<tr>
+                    <td colspan="4" class="text-left">
+                        <button onclick="cetakReportSummary(`' . route('permintaan_pengembangan.cetakDokumenSummary', $trx_permintaan_pengembangan->id_permintaan_pengembangan) . '`)" class="btn btn-info btn-xs btn-flat">
+                            <i class="fa fa-download"></i> Cetak Report Project
+                        </button>
+                    </td>
+                  </tr>';
             
                 $html .= '</table>
                         </div>
