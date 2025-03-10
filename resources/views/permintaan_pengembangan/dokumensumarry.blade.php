@@ -82,6 +82,10 @@ use Carbon\Carbon;
     </tr>
 
     @foreach ($datapermintaan as $data)
+        @php 
+            $persetujuan = $trx_persetujuan_pengembangan->where('id_permintaan_pengembangan', $data->id_permintaan_pengembangan)->first();
+            $perencanaanProyek = $trx_perencanaan_proyek->where('id_persetujuan_pengembangan', $persetujuan->id_persetujuan_pengembangan ?? 0);
+        @endphp
         <tr>
         <td>
                 <b style="font-size: 16px;"><b>Proyek</b> : {{ $data->judul ?? 'Judul Belum Tersedia' }}</b>
