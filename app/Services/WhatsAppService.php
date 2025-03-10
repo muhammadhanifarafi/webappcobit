@@ -10,7 +10,7 @@ class WhatsAppService
     public function sendWhatsAppMessage($target, $message)
     {
         $response = Http::withHeaders([
-            'Authorization' => '3d4EsiUFzqHPxMnpn8SY', // Ganti dengan API key yang sesuai
+            'Authorization' => 'E1MNX4umGjXe4QW55tBq', // Ganti dengan API key yang sesuai
         ])->post('https://api.fonnte.com/send', [
             'target' => $target, // Nomor tujuan
             'message' => $message, // Pesan yang akan dikirim

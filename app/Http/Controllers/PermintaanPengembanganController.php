@@ -490,30 +490,39 @@ class PermintaanPengembanganController extends Controller
                 return '-';
             })
             ->addColumn('approval_status', function ($trx_permintaan_pengembangan) {
-                // Mendapatkan nik pengguna yang sedang login
-                $nikLogin = auth()->user()->nik; // Pastikan menggunakan metode yang sesuai untuk mendapatkan nik pengguna yang sedang login
-                
+                $nikLogin = auth()->user()->nik;
+            
                 $html = '<div class="box box-solid box-default">
                             <div class="box-body">
                                 <table class="table table-bordered">';
             
-                // Helper function for rendering the approval status and buttons
-                $renderApproval = function ($status, $route, $is_approve, $label, $nikPenyetuju = null, $is_approve_pemverifikasi = null, $nikPemverifikasi = null) use ($nikLogin, $trx_permintaan_pengembangan) {
-                    $labelClass = $is_approve != 1 ? 'label label-warning' : 'label label-success';
-                    $labelText = $is_approve != 1 ? 'Menunggu Persetujuan Penyetuju <b><span style="color:black"> (' . $trx_permintaan_pengembangan->nama_penyetuju . ')</span></b>' : 'Sudah Disetujui Penyetuju <b><span style="color:black"> (' . $trx_permintaan_pengembangan->approve_by . ')</span></b>';
-                    $buttonText = $is_approve != 1 ? 'Approve' : 'Approved';
-                    $buttonClass = $is_approve != 1 ? 'btn-warning' : 'btn-success';
-                    $buttonDisabled = $is_approve != 1 ? '' : 'disabled';
-
-                    // Jika nik_penyetuju sama dengan nik login, maka tombol approve aktif
-                    if ($nikPenyetuju && $nikPenyetuju != $nikLogin) {
-                        $buttonDisabled = 'disabled'; // Disable tombol jika nik_pemverifikasi tidak sesuai dengan nik login
+                $renderApproval = function ($status, $route, $is_approve, $label, $namaPenyetuju = null, 
+                    $is_approve_pemverifikasi = null, $nikPemverifikasi = null, $is_perencanaan = false) 
+                    use ($nikLogin, $trx_permintaan_pengembangan) {
+            
+                    // Pastikan bahwa variabel ini selalu ada
+                    $approverNama = null;
+            
+                    if (!is_null($is_approve) && $is_approve != 0) {
+                        $finalApproval = $is_approve;
+                        $approverLabel = "Sudah Disetujui Penyetuju";
+                        $approverNama = $namaPenyetuju;
+                    } elseif ($is_perencanaan && is_null($is_approve_pemverifikasi)) {
+                        $finalApproval = 0;
+                        $approverLabel = "Menunggu Persetujuan Pemverifikasi";
+                        $approverNama = $nikPemverifikasi; // Pemverifikasi bertanggung jawab dalam tahap awal
+                    } elseif ($is_perencanaan && !is_null($is_approve_pemverifikasi) && is_null($is_approve)) {
+                        $finalApproval = 0;
+                        $approverLabel = "Menunggu Persetujuan Penyetuju";
+                        $approverNama = $namaPenyetuju; // Penyetuju bertanggung jawab di tahap akhir
+                    } else {
+                        $finalApproval = 0;
+                        $approverLabel = "Menunggu Persetujuan Penyetuju";
+                        $approverNama = $namaPenyetuju;
                     }
             
-                    // Cek juga nik_pemverifikasi
-                    if ($nikPemverifikasi && $nikPemverifikasi != $nikLogin) {
-                        $buttonDisabled = 'disabled'; // Disable tombol jika nik_pemverifikasi tidak sesuai dengan nik login
-                    }
+                    $labelClass = $finalApproval != 1 ? 'label label-warning' : 'label label-success';
+                    $labelText = "{$approverLabel} " . (!empty($approverNama) ? "<b><span style='color:black'>({$approverNama})</span></b>" : "");
             
                     return "
                         <tr>
@@ -524,13 +533,6 @@ class PermintaanPengembanganController extends Controller
                                     <i class=\"fa fa-download\"></i> Cetak Dokumen
                                 </button>
                             </td>
-                            " . (auth()->user()->level == 2 ? "
-                            <td>
-                            <button type=\"button\" onclick=\"approveProyek('{$route}')\" class=\"btn btn-xs {$buttonClass} btn-flat\" {$buttonDisabled}>
-                                <i class=\"fa fa-check\"></i> {$buttonText}
-                            </button>
-                            </td>
-                            " : "") . "
                         </tr>
                     ";
                 };
@@ -541,7 +543,7 @@ class PermintaanPengembanganController extends Controller
                     route('permintaan_pengembangan.cetakDokumen', $trx_permintaan_pengembangan->id_permintaan_pengembangan), 
                     $trx_permintaan_pengembangan->is_approve, 
                     'Permintaan Pengembangan',
-                    $trx_permintaan_pengembangan->nik_penyetuju
+                    $trx_permintaan_pengembangan->nama_penyetuju
                 );
             
                 // Persetujuan Pengembangan
@@ -552,14 +554,11 @@ class PermintaanPengembanganController extends Controller
                         route('persetujuan_pengembangan.cetakDokumen', $persetujuanPengembangan->id_persetujuan_pengembangan), 
                         $persetujuanPengembangan->is_approve, 
                         'Persetujuan Pengembangan',
-                        $persetujuanPengembangan->nik_penyetuju
+                        $persetujuanPengembangan->nama_penyetuju
                     ) : 
-                    '<tr>
-                    <td colspan="2">Persetujuan Pengembangan</td>
-                    <td colspan="2" class="text-left"><span class="text-danger font-weight-bold" style="background-color: yellow;">Belum ada persetujuan</span></td>
-                    </tr>';
+                    '<tr><td colspan="2">Persetujuan Pengembangan</td><td colspan="2" class="text-left"><span class="text-danger font-weight-bold" style="background-color: yellow;">Belum Dibuat</span></td></tr>';
             
-                // Perencanaan Proyek (dengan pengecekan is_approve_pemverifikasi dan nik_pemverifikasi)
+                // Perencanaan Proyek
                 $perencanaanProyek = PerencanaanProyek::where('id_persetujuan_pengembangan', $persetujuanPengembangan ? $persetujuanPengembangan->id_persetujuan_pengembangan : null)->first();
                 $html .= $perencanaanProyek ? 
                     $renderApproval(
@@ -567,15 +566,14 @@ class PermintaanPengembanganController extends Controller
                         route('perencanaan_proyek.cetakDokumen', $perencanaanProyek->id_perencanaan_proyek), 
                         $perencanaanProyek->is_approve, 
                         'Perencanaan Proyek',
-                        $perencanaanProyek->nik_penyetuju,
-                        $perencanaanProyek->is_approve_pemverifikasi, // Menambahkan pengecekan is_approve_pemverifikasi
-                        $perencanaanProyek->nik_pemverifikasi // Menambahkan pengecekan nik_pemverifikasi
+                        $perencanaanProyek->nama_penyetuju,
+                        $perencanaanProyek->is_approve_pemverifikasi,
+                        $perencanaanProyek->nama_pemverifikasi,
+                        true
                     ) : 
-                    '<tr>
-                     <td colspan="2">Perencanaan Proyek</td>
-                     <td colspan="2" class="text-left"><span class="text-danger font-weight-bold" style="background-color: yellow;">Belum ada perencanaan proyek</td></tr>';
+                    '<tr><td colspan="2">Perencanaan Proyek</td><td colspan="2" class="text-left"><span class="text-danger font-weight-bold" style="background-color: yellow;">Belum Dibuat</td></tr>';
             
-                // Perencanaan Kebutuhan (dengan pengecekan is_approve_pemverifikasi dan nik_pemverifikasi)
+                // Perencanaan Kebutuhan
                 $perencanaanKebutuhan = PerencanaanKebutuhan::where('id_persetujuan_pengembangan', $persetujuanPengembangan ? $persetujuanPengembangan->id_persetujuan_pengembangan : null)->first();
                 $html .= $perencanaanKebutuhan ? 
                     $renderApproval(
@@ -583,71 +581,39 @@ class PermintaanPengembanganController extends Controller
                         route('perencanaan_kebutuhan.cetakDokumen', $perencanaanKebutuhan->id_perencanaan_kebutuhan), 
                         $perencanaanKebutuhan->is_approve, 
                         'Perencanaan Kebutuhan',
-                        $perencanaanKebutuhan->nik_penyetuju,
-                        $perencanaanKebutuhan->is_approve_pemverifikasi, // Menambahkan pengecekan is_approve_pemverifikasi
-                        $perencanaanKebutuhan->nik_pemverifikasi // Menambahkan pengecekan nik_pemverifikasi
+                        $perencanaanKebutuhan->nama_penyetuju,
+                        $perencanaanKebutuhan->is_approve_pemverifikasi,
+                        $perencanaanKebutuhan->nama_pemverifikasi,
+                        true
                     ) : 
-                    '<tr>
-                    <td colspan="2">Perencanaan Kebutuhan</td>
-                    <td colspan="2" class="text-left"><span class="text-danger font-weight-bold" style="background-color: yellow;">Belum ada perencanaan kebutuhan</td></tr>';
+                    '<tr><td colspan="2">Perencanaan Kebutuhan</td><td colspan="2" class="text-left"><span class="text-danger font-weight-bold" style="background-color: yellow;">Belum Dibuat</td></tr>';
             
-                // Analisis dan Desain
-                $analisisDesain = AnalisisDesain::where('id_permintaan_pengembangan', $trx_permintaan_pengembangan->id_permintaan_pengembangan)->first();
-                $html .= $analisisDesain ? 
-                    $renderApproval(
-                        'Analisis dan Desain', 
-                        route('analisis_desain.cetakDokumen', $analisisDesain->id_analisis_desain), 
-                        $analisisDesain->is_approve, 
-                        'Analisis dan Desain',
-                        $analisisDesain->nik_penyetuju
-                    ) : 
-                    '<tr>
-                    <td colspan="2">Analisis dan Desain</td>
-                    <td colspan="2" class="text-left"><span class="text-danger font-weight-bold" style="background-color: yellow;">Belum ada analisis dan desain</td></tr>';
+                // Modul lainnya: Analisis Desain, QA Testing, Serah Terima Aplikasi
+                $modulLainnya = [
+                    ['Analisis Desain', 'analisis_desain', AnalisisDesain::where('id_permintaan_pengembangan', $trx_permintaan_pengembangan->id_permintaan_pengembangan)->first()],
+                    ['Quality Assurance Testing', 'quality_assurance_testing', QualityAssuranceTesting::where('id_permintaan_pengembangan', $trx_permintaan_pengembangan->id_permintaan_pengembangan)->first()],
+                    ['Serah Terima Aplikasi', 'serah_terima_aplikasi', SerahTerimaAplikasi::where('id_permintaan_pengembangan', $trx_permintaan_pengembangan->id_permintaan_pengembangan)->first()]
+                ];
             
-                // Quality Assurance Testing
-                $qualityAssuranceTesting = QualityAssuranceTesting::where('id_permintaan_pengembangan', $trx_permintaan_pengembangan->id_permintaan_pengembangan)->first();
-                $html .= $qualityAssuranceTesting ? 
-                    $renderApproval(
-                        'Quality Assurance Testing', 
-                        route('quality_assurance_testing.cetakDokumen', $qualityAssuranceTesting->id_quality_assurance_testing), 
-                        $qualityAssuranceTesting->is_approve, 
-                        'Quality Assurance Testing',
-                        $qualityAssuranceTesting->nik_penyetuju
-                    ) : 
-                    '<tr>
-                    <td colspan="2">Quality Assurance Testing</td>
-                    <td colspan="2" class="text-left"><span class="text-danger font-weight-bold" style="background-color: yellow;">Belum ada quality assurance testing</td></tr>';
+                foreach ($modulLainnya as $modul) {
+                    $modulData = $modul[2];
+                    $html .= $modulData ? 
+                        $renderApproval(
+                            $modul[0],
+                            route("{$modul[1]}.cetakDokumen", $modulData->id),
+                            $modulData->is_approve,
+                            $modul[0],
+                            $modulData->nama_penyetuju
+                        ) : 
+                        "<tr><td colspan='2'>{$modul[0]}</td><td colspan='2' class='text-left'><span class='text-danger font-weight-bold' style='background-color: yellow;'>Belum Dibuat</td></tr>";
+                }
             
-                // Serah Terima Aplikasi
-                $serahTerimaAplikasi = SerahTerimaAplikasi::where('id_permintaan_pengembangan', $trx_permintaan_pengembangan->id_permintaan_pengembangan)->first();
-                $html .= $serahTerimaAplikasi ? 
-                    $renderApproval(
-                        'Serah Terima Aplikasi', 
-                        route('serah_terima_aplikasi.cetakDokumen', $serahTerimaAplikasi->id_serah_terima_aplikasi), 
-                        $serahTerimaAplikasi->is_approve, 
-                        'Serah Terima Aplikasi',
-                        $serahTerimaAplikasi->nik_penyetuju
-                    ) : 
-                    '<tr>
-                    <td colspan="2">Serah Terima Aplikasi</td>
-                    <td colspan="2" class="text-left"><span class="text-danger font-weight-bold" style="background-color: yellow;">Belum ada serah terima aplikasi</td></tr>';
-                
-                $html .= '<tr>
-                    <td colspan="4" class="text-left">
-                        <button onclick="cetakReportSummary(`' . route('permintaan_pengembangan.cetakDokumenSummary', $trx_permintaan_pengembangan->id_permintaan_pengembangan) . '`)" class="btn btn-info btn-xs btn-flat">
-                            <i class="fa fa-download"></i> Cetak Report Project
-                        </button>
-                    </td>
-                  </tr>';
-
-                  
                 $html .= '</table>
                         </div>
                     </div>';
             
                 return $html;
-            })                           
+            })                                                           
             ->addColumn('unit_pemohon', function ($trx_permintaan_pengembangan) {
                 $unit_pemohon = DB::table('sitmsemployee')
                                 ->where('employee_id', $trx_permintaan_pengembangan->nik_pemohon)
