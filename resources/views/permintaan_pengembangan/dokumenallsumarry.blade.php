@@ -146,8 +146,8 @@ use Carbon\Carbon;
             <td></td>
             <td></td>
             <td>Perencanaan Proyek</td>
-            <td class="{{ $perencanaanProyek->isNotEmpty() && optional($perencanaanProyek->first())->is_approve_pemverifikasi ? 'status-approved' : ($perencanaanProyek->isNotEmpty() && optional($perencanaanProyek->first())->is_approve ? 'status-pending' : 'status-not-created') }}">
-                {{ $perencanaanProyek->isNotEmpty() ? (optional($perencanaanProyek->first())->is_approve ? 'Disetujui Penyetuju' : (optional($perencanaanProyek->first())->is_approve_pemverifikasi ? 'Disetujui Pemverifikasi' : (optional($perencanaanProyek->first())->approve_by_pemverifikasi ? 'Menunggu Persetujuan Pemverifikasi' : 'Menunggu Persetujuan Penyetuju'))) : 'Belum Dibuat' }}
+            <td class="{{ $perencanaanProyek->isNotEmpty() && optional($perencanaanProyek->first())->is_approve && optional($perencanaanProyek->first())->is_approve_pemverifikasi ? 'status-approved' : ($perencanaanProyek->isNotEmpty() && optional($perencanaanProyek->first())->is_approve ? 'status-approved' : 'status-pending') }}">
+                {{ $perencanaanProyek->isNotEmpty() ? (optional($perencanaanProyek->first())->is_approve && optional($perencanaanProyek->first())->is_approve_pemverifikasi ? 'Sudah di Approve Penyetuju' : (optional($perencanaanProyek->first())->is_approve ? 'Sudah di Approve Pemverifikasi' : 'Menunggu Approval Pemverifikasi')) : 'Belum Dibuat' }} 
             </td>
             <td>{{ optional($perencanaanProyek->first())->approve_at ? Carbon::parse(optional($perencanaanProyek->first())->approve_at)->translatedFormat('d F Y') : '' }}</td>
             <td>{{ optional($perencanaanProyek->first())->is_approve_pemverifikasi ? optional($perencanaanProyek->first())->nama_penyetuju : optional($perencanaanProyek->first())->approve_by_pemverifikasi ?? '' }}</td>
@@ -162,8 +162,8 @@ use Carbon\Carbon;
             <td></td>
             <td></td>
             <td>Perencanaan Kebutuhan</td>
-            <td class="{{ $perencanaanKebutuhan->isNotEmpty() && optional($perencanaanKebutuhan->first())->is_approve_pemverifikasi ? 'status-approved' : ($perencanaanKebutuhan->isNotEmpty() && optional($perencanaanKebutuhan->first())->is_approve ? 'status-pending' : 'status-not-created') }}">
-            {{ $perencanaanKebutuhan->isNotEmpty() ? (optional($perencanaanKebutuhan->first())->is_approve ? 'Disetujui Penyetuju' : (optional($perencanaanKebutuhan->first())->is_approve_pemverifikasi ? 'Disetujui Pemverifikasi' : (optional($perencanaanKebutuhan->first())->approve_by_pemverifikasi ? 'Menunggu Persetujuan Pemverifikasi' : 'Menunggu Persetujuan Penyetuju'))) : 'Belum Dibuat' }}
+            <td class="{{ $perencanaanKebutuhan->isNotEmpty() && optional($perencanaanKebutuhan->first())->is_approve && optional($perencanaanKebutuhan->first())->is_approve_pemverifikasi ? 'status-approved' : ($perencanaanKebutuhan->isNotEmpty() && optional($perencanaanKebutuhan->first())->is_approve ? 'status-approved' : 'status-pending') }}">
+                {{ $perencanaanKebutuhan->isNotEmpty() ? (optional($perencanaanKebutuhan->first())->is_approve && optional($perencanaanKebutuhan->first())->is_approve_pemverifikasi ? 'Sudah di Approve Penyetuju' : (optional($perencanaanKebutuhan->first())->is_approve ? 'Sudah di Approve Pemverifikasi' : 'Menunggu Approval Pemverifikasi')) : 'Belum Dibuat' }} 
             </td>
             <td>{{ optional($perencanaanKebutuhan->first())->approve_at ? Carbon::parse(optional($perencanaanKebutuhan->first())->approve_at)->translatedFormat('d F Y') : '' }}</td>
             <td>{{ optional($perencanaanProyek->first())->is_approve_pemverifikasi ? optional($perencanaanProyek->first())->nama_penyetuju : optional($perencanaanProyek->first())->approve_by_pemverifikasi ?? '' }}</td>
