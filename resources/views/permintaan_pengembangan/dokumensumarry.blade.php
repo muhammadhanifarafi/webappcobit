@@ -87,7 +87,7 @@ use Carbon\Carbon;
             $perencanaanProyek = $trx_perencanaan_proyek->where('id_persetujuan_pengembangan', $persetujuan->id_persetujuan_pengembangan ?? 0);
         @endphp
         <tr>
-        <td>
+            <td>
                 <b style="font-size: 16px;"><b>Proyek</b> : {{ $data->judul ?? 'Judul Belum Tersedia' }}</b>
                 <br>
                 <br>
@@ -174,6 +174,7 @@ use Carbon\Carbon;
             <td class="{{ $analisisDesain->isNotEmpty() && optional($analisisDesain->first())->is_approve ? 'status-approved' : ($analisisDesain->isNotEmpty() ? 'status-pending' : 'status-not-created') }}">
                 {{ $analisisDesain->isNotEmpty() ? ($analisisDesain->first()->is_approve ? 'Disetujui Penyetuju' : 'Menunggu Persetujuan Penyetuju') : 'Belum Dibuat' }} 
             </td>
+            <td>{{ optional($analisisDesain->first())->approve_at ? Carbon::parse(optional($analisisDesain->first())->approve_at)->translatedFormat('d F Y') : '' }}</td>
         </tr>
 
         {{-- Quality Assurance Testing --}}
@@ -187,6 +188,7 @@ use Carbon\Carbon;
             <td class="{{ $qualityAssurance->isNotEmpty() && optional($qualityAssurance->first())->is_approve ? 'status-approved' : ($qualityAssurance->isNotEmpty() ? 'status-pending' : 'status-not-created') }}">
                 {{ $qualityAssurance->isNotEmpty() ? ($qualityAssurance->first()->is_approve ? 'Disetujui Penyetuju' : 'Menunggu Persetujuan Penyetuju') : 'Belum Dibuat' }} 
             </td>
+            <td>{{ optional($qualityAssurance->first())->approve_at ? Carbon::parse(optional($qualityAssurance->first())->approve_at)->translatedFormat('d F Y') : '' }}</td>
         </tr>
 
         {{-- User Acceptance Testing --}}
@@ -200,6 +202,7 @@ use Carbon\Carbon;
             <td class="{{ $userAcceptanceTesting->isNotEmpty() && optional($userAcceptanceTesting->first())->is_approve ? 'status-approved' : ($userAcceptanceTesting->isNotEmpty() ? 'status-pending' : 'status-not-created') }}">
                 {{ $userAcceptanceTesting->isNotEmpty() ? ($userAcceptanceTesting->first()->is_approve ? 'Disetujui Penyetuju' : 'Menunggu Persetujuan Penyetuju') : 'Belum Dibuat' }}
             </td>
+            <td>{{ optional($userAcceptanceTesting->first())->approve_at ? Carbon::parse(optional($userAcceptanceTesting->first())->approve_at)->translatedFormat('d F Y') : '' }}</td>
         </tr>
 
         {{-- Serah Terima Aplikasi --}}
@@ -213,6 +216,7 @@ use Carbon\Carbon;
             <td class="{{ $serahTerima->isNotEmpty() && optional($serahTerima->first())->is_approve ? 'status-approved' : ($serahTerima->isNotEmpty() ? 'status-pending' : 'status-not-created') }}">
                 {{ $serahTerima->isNotEmpty() ? ($serahTerima->first()->is_approve ? 'Disetujui Penyetuju' : 'Menunggu Persetujuan Penyetuju') : 'Belum Dibuat' }}
             </td>
+            <td>{{ optional($serahTerima->first())->approve_at ? Carbon::parse(optional($serahTerima->first())->approve_at)->translatedFormat('d F Y') : '' }}</td>
         </tr>
     @endforeach
 </table>

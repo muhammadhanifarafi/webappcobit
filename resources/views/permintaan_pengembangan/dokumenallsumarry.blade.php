@@ -80,7 +80,6 @@ use Carbon\Carbon;
         <th>Tahap</th>
         <th>Approval Status</th>
         <th>Approval Date</th>
-        <th>Approval By</th>
     </tr>
 
     @foreach ($datapermintaan as $data)
@@ -119,7 +118,6 @@ use Carbon\Carbon;
                 {{ $permintaan->isNotEmpty() ? ($permintaan->first()->is_approve ? 'Disetujui Penyetuju' : 'Menunggu Persetujuan ' . (optional($permintaan->first())->approve_by ?? '')) : 'Belum Dibuat' }}
             </td>
             <td>{{ optional($permintaan->first())->approve_at ? Carbon::parse(optional($permintaan->first())->approve_at)->translatedFormat('d F Y') : '' }}</td>
-            <td>{{ optional($permintaan->first())->nama_penyetuju ?? '' }}</td>
         </tr>
 
         {{-- Persetujuan Pengembangan --}}
@@ -134,7 +132,6 @@ use Carbon\Carbon;
                 {{ $persetujuan->isNotEmpty() ? ($persetujuan->first()->is_approve ? 'Disetujui Penyetuju' : 'Menunggu Persetujuan Penyetuju') : 'Belum Dibuat' }}
             </td>
             <td>{{ optional($persetujuan->first())->approve_at ? Carbon::parse(optional($persetujuan->first())->approve_at)->translatedFormat('d F Y') : '' }}</td>
-            <td>{{ optional($persetujuan->first())->nama_penyetuju ?? '' }}</td>
         </tr>
 
         {{-- Perencanaan Proyek --}}
@@ -150,7 +147,6 @@ use Carbon\Carbon;
                 {{ $perencanaanProyek->isNotEmpty() ? (optional($perencanaanProyek->first())->is_approve && optional($perencanaanProyek->first())->is_approve_pemverifikasi ? 'Sudah di Approve Penyetuju' : (optional($perencanaanProyek->first())->is_approve ? 'Sudah di Approve Pemverifikasi' : 'Menunggu Approval Pemverifikasi')) : 'Belum Dibuat' }} 
             </td>
             <td>{{ optional($perencanaanProyek->first())->approve_at ? Carbon::parse(optional($perencanaanProyek->first())->approve_at)->translatedFormat('d F Y') : '' }}</td>
-            <td>{{ optional($perencanaanProyek->first())->is_approve_pemverifikasi ? optional($perencanaanProyek->first())->nama_penyetuju : optional($perencanaanProyek->first())->approve_by_pemverifikasi ?? '' }}</td>
         </tr>
 
         {{-- Perencanaan Kebutuhan --}}
@@ -166,7 +162,6 @@ use Carbon\Carbon;
                 {{ $perencanaanKebutuhan->isNotEmpty() ? (optional($perencanaanKebutuhan->first())->is_approve && optional($perencanaanKebutuhan->first())->is_approve_pemverifikasi ? 'Sudah di Approve Penyetuju' : (optional($perencanaanKebutuhan->first())->is_approve ? 'Sudah di Approve Pemverifikasi' : 'Menunggu Approval Pemverifikasi')) : 'Belum Dibuat' }} 
             </td>
             <td>{{ optional($perencanaanKebutuhan->first())->approve_at ? Carbon::parse(optional($perencanaanKebutuhan->first())->approve_at)->translatedFormat('d F Y') : '' }}</td>
-            <td>{{ optional($perencanaanProyek->first())->is_approve_pemverifikasi ? optional($perencanaanProyek->first())->nama_penyetuju : optional($perencanaanProyek->first())->approve_by_pemverifikasi ?? '' }}</td>
         </tr>
 
         {{-- Analisis Desain --}}
@@ -181,7 +176,6 @@ use Carbon\Carbon;
                 {{ $analisisDesain->isNotEmpty() ? ($analisisDesain->first()->is_approve ? 'Disetujui Penyetuju' : 'Menunggu Persetujuan Penyetuju') : 'Belum Dibuat' }} 
             </td>
             <td>{{ optional($analisisDesain->first())->approve_at ? Carbon::parse(optional($analisisDesain->first())->approve_at)->translatedFormat('d F Y') : '' }}</td>
-            <td>{{ optional($analisisDesain->first())->nama_penyetuju ?? '' }}</td>
         </tr>
 
         {{-- Quality Assurance Testing --}}
@@ -196,7 +190,6 @@ use Carbon\Carbon;
                 {{ $qualityAssurance->isNotEmpty() ? ($qualityAssurance->first()->is_approve ? 'Disetujui Penyetuju' : 'Menunggu Persetujuan Penyetuju') : 'Belum Dibuat' }} 
             </td>
             <td>{{ optional($qualityAssurance->first())->approve_at ? Carbon::parse(optional($qualityAssurance->first())->approve_at)->translatedFormat('d F Y') : '' }}</td>
-            <td>{{ optional($qualityAssurance->first())->nama_penyetuju ?? '' }}</td>
         </tr>
 
         {{-- User Acceptance Testing --}}
@@ -211,7 +204,6 @@ use Carbon\Carbon;
                 {{ $userAcceptanceTesting->isNotEmpty() ? ($userAcceptanceTesting->first()->is_approve ? 'Disetujui Penyetuju' : 'Menunggu Persetujuan Penyetuju') : 'Belum Dibuat' }}
             </td>
             <td>{{ optional($userAcceptanceTesting->first())->approve_at ? Carbon::parse(optional($userAcceptanceTesting->first())->approve_at)->translatedFormat('d F Y') : '' }}</td>
-            <td>{{ optional($userAcceptanceTesting->first())->nama_penyetuju ?? '' }}</td>
         </tr>
 
         {{-- Serah Terima Aplikasi --}}
@@ -226,7 +218,6 @@ use Carbon\Carbon;
                 {{ $serahTerima->isNotEmpty() ? ($serahTerima->first()->is_approve ? 'Disetujui Penyetuju' : 'Menunggu Persetujuan Penyetuju') : 'Belum Dibuat' }}
             </td>
             <td>{{ optional($serahTerima->first())->approve_at ? Carbon::parse(optional($serahTerima->first())->approve_at)->translatedFormat('d F Y') : '' }}</td>
-            <td>{{ optional($serahTerima->first())->nama_penyetuju ?? '' }}</td>
         </tr>
     @endforeach
 </table>
